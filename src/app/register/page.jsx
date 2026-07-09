@@ -78,13 +78,13 @@ try {
 
 };
 
-return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-10">
+return ( <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-10">
 
 
   <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl overflow-hidden grid lg:grid-cols-2">
 
     {/* Left Section */}
-    <div className="hidden lg:flex flex-col justify-center bg-gradient-to-br from-blue-700 via-indigo-700 to-slate-900 p-14 text-white">
+    <div className="hidden lg:flex flex-col justify-center bg-linear-to-br from-blue-700 via-indigo-700 to-gray-900 p-14 text-white">
 
       <h1 className="text-5xl font-bold leading-tight">
         Join Our
@@ -140,11 +140,11 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
 
       <div className="max-w-xl mx-auto">
 
-        <h2 className="text-4xl font-bold text-slate-900 text-center">
+        <h2 className="text-4xl font-bold text-gray-900 text-center">
           Create Account
         </h2>
 
-        <p className="text-center text-slate-500 mt-3">
+        <p className="text-center text-gray-500 mt-3">
           Register and start growing your business
         </p>
 
@@ -165,7 +165,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               onChange={handleChange}
               placeholder="Rahul Mahajan"
               required
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -180,7 +180,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               value={formData.businessName}
               onChange={handleChange}
               placeholder="ABC Pvt Ltd"
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -196,7 +196,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               onChange={handleChange}
               placeholder="rahul@example.com"
               required
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -211,7 +211,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               value={formData.mobile}
               onChange={handleChange}
               placeholder="+91 9876543210"
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -227,7 +227,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               onChange={handleChange}
               placeholder="Create Password"
               required
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -243,7 +243,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               onChange={handleChange}
               placeholder="Confirm Password"
               required
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             />
           </div>
 
@@ -256,7 +256,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
             >
               <option value="visitor">
                 Visitor
@@ -269,7 +269,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
           </div>
 
           <div className="md:col-span-2">
-            <label className="flex items-center gap-3 text-sm text-slate-600">
+            <label className="flex items-center gap-3 text-sm text-gray-600">
               <input
                 type="checkbox"
                 required
@@ -292,7 +292,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
 
         </form>
 
-        <p className="text-center mt-8 text-slate-600">
+        <p className="text-center mt-8 text-gray-600">
           Already have an account?
         </p>
 

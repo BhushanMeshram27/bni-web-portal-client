@@ -4,11 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function HomePage() {
-return (
-   <main className="min-h-screen bg-white scroll-smooth">
+return ( <main className="min-h-screen bg-white">
 
   
-  <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+  <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
     <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
       <Image
@@ -20,42 +19,28 @@ return (
         priority
       />
 
-       <nav className="hidden lg:flex gap-8 text-slate-700 font-medium">
+      <nav className="hidden md:flex items-center gap-10 text-slate-700 font-medium">
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="#success">Success Stories</a>
+        <a href="#contact">Contact</a>
+      </nav>
 
-            <a href="#features" className="hover:text-blue-600">
-              Features
-            </a>
+      <div className="flex items-center gap-4">
 
-            <a href="#about" className="hover:text-blue-600">
-              About
-            </a>
+        <Link
+          href="/login"
+          className="px-5 py-2.5 rounded-xl  bg-blue-600 text-white hover:bg-blue-700 transition"
+        >
+          Login
+        </Link>
 
-            <a href="#success" className="hover:text-blue-600">
-              Success
-            </a>
-
-            <a href="#contact" className="hover:text-blue-600">
-              Contact
-            </a>
-
-          </nav>
-
-      <div className="flex gap-3">
-
-            <Link
-              href="/login"
-              className="px-6 py-2.5 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition"
-            >
-              Login
-            </Link>
-
-
-            <Link
-              href="/register"
-              className="px-6 py-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
-            >
-              Register
-            </Link>
+        <Link
+          href="/register"
+          className="px-6 py-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
+        >
+          Register
+        </Link>
 
       </div>
 
@@ -63,7 +48,7 @@ return (
   </header>
 
   
-  <section className="pt-40 pb-28 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
+  <section className="pt-40 pb-28 bg-linear-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
 
     <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
 
@@ -100,7 +85,7 @@ return (
 
           <Link
             href="/login"
-            className="px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 font-semibold"
+            className="px-8 py-4 rounded-xl  bg-blue-600 hover:bg-blue-700 font-semibold"
           >
             Sign In
           </Link>
@@ -151,7 +136,7 @@ return (
               {value}
             </h3>
 
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-gray-600">
               {title}
             </p>
           </div>
@@ -173,11 +158,11 @@ return (
 
       <div className="text-center">
 
-        <h2 className="text-5xl font-bold text-slate-900">
+        <h2 className="text-5xl font-bold text-gray-900">
           Powerful Features
         </h2>
 
-        <p className="mt-4 text-slate-600">
+        <p className="mt-4 text-gray-600">
           Everything you need to grow your network.
         </p>
 
@@ -195,13 +180,13 @@ return (
         ].map((feature) => (
           <div
             key={feature}
-            className="bg-white border border-slate-200 rounded-3xl p-8 hover:shadow-xl transition"
+            className="bg-white border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition"
           >
             <h3 className="text-xl font-semibold">
               {feature}
             </h3>
 
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 text-gray-600">
               Manage and monitor your business
               activities effectively.
             </p>
@@ -216,7 +201,7 @@ return (
   </section>
 
   
-  <section className="py-24 bg-slate-900 text-white">
+  <section className="py-24 bg-gray-900 text-white">
 
     <div className="max-w-5xl mx-auto text-center px-6">
 
@@ -224,7 +209,7 @@ return (
         Ready To Expand Your Network?
       </h2>
 
-      <p className="mt-6 text-slate-300 text-lg">
+      <p className="mt-6 text-gray-300 text-lg">
         Join thousands of professionals already
         growing their businesses through strategic
         networking.
@@ -242,15 +227,15 @@ return (
   </section>
 
   
-  <footer className="bg-white border-t border-slate-200 py-8">
+  <footer className="bg-white border-t border-gray-200 py-8">
 
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
 
-      <p className="text-slate-500">
+      <p className="text-gray-500">
         © 2026 BNI Portal. All rights reserved.
       </p>
 
-      <div className="flex gap-6 mt-4 md:mt-0 text-slate-500">
+      <div className="flex gap-6 mt-4 md:mt-0 text-gray-500">
         <a href="#">Privacy Policy</a>
         <a href="#">Terms</a>
         <a href="#">Contact</a>

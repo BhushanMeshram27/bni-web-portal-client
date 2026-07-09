@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
 import { apiRoot } from "@/services/api";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function LoginPage() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -60,12 +62,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-10">
 
-      <div className="w-full max-w-6xl bg-white rounded-[32px] shadow-2xl overflow-hidden grid lg:grid-cols-2">
+      <div className="w-full max-w-6xl bg-white rounded-4xl shadow-2xl overflow-hidden grid lg:grid-cols-2">
 
         {/* Left Section */}
-        <div className="hidden lg:flex flex-col justify-center p-14 bg-gradient-to-br from-blue-700 via-indigo-700 to-slate-900 text-white">
+        <div className="hidden lg:flex flex-col justify-center p-14 bg-linear-to-br from-blue-700 via-indigo-700 to-gray-900 text-white">
 
           <h1 className="text-6xl font-bold leading-tight">
             Grow Your
@@ -110,11 +112,11 @@ export default function LoginPage() {
 
           <div className="max-w-md mx-auto mt-16">
 
-            <h2 className="text-4xl font-bold text-slate-900">
+            <h2 className="text-4xl font-bold text-gray-900">
               Welcome Back
             </h2>
 
-            <p className="text-slate-500 mt-3">
+            <p className="text-gray-700 mt-3">
               Sign in to access your account
             </p>
 
@@ -125,7 +127,7 @@ export default function LoginPage() {
 
               {/* Email */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-700">
+                <label className="block mb-2 text-sm font-medium text-gray-700">
                   Email Address
                 </label>
 
@@ -136,30 +138,44 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   required
-                  className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-700">
-                  Password
-                </label>
+  <label className="block mb-2 text-sm font-medium text-gray-700">
+    Password
+  </label>
 
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  required
-                  className="w-full h-14 px-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
-                />
-              </div>
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      value={formData.password}
+      onChange={handleChange}
+      placeholder="Enter your password"
+      required
+      className="w-full h-14 px-4 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+    >
+      {showPassword ? (
+        <FaEyeSlash size={20} />
+      ) : (
+        <FaEye size={20} />
+      )}
+    </button>
+  </div>
+</div>
 
               <div className="flex items-center justify-between text-sm">
 
-                <label className="flex items-center gap-2 text-slate-600">
+                <label className="flex items-center gap-2 text-gray-600">
                   <input type="checkbox" />
                   Remember Me
                 </label>
