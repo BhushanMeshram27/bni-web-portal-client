@@ -4,10 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function HomePage() {
-return ( <main className="min-h-screen bg-white">
+return (
+   <main className="min-h-screen bg-white scroll-smooth">
 
   
-  <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+  <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
     <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
       <Image
@@ -19,28 +20,42 @@ return ( <main className="min-h-screen bg-white">
         priority
       />
 
-      <nav className="hidden md:flex items-center gap-10 text-slate-700 font-medium">
-        <a href="#features">Features</a>
-        <a href="#about">About</a>
-        <a href="#success">Success Stories</a>
-        <a href="#contact">Contact</a>
-      </nav>
+       <nav className="hidden lg:flex gap-8 text-slate-700 font-medium">
 
-      <div className="flex items-center gap-4">
+            <a href="#features" className="hover:text-blue-600">
+              Features
+            </a>
 
-        <Link
-          href="/login"
-          className="px-5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 transition"
-        >
-          Login
-        </Link>
+            <a href="#about" className="hover:text-blue-600">
+              About
+            </a>
 
-        <Link
-          href="/register"
-          className="px-6 py-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
-        >
-          Register
-        </Link>
+            <a href="#success" className="hover:text-blue-600">
+              Success
+            </a>
+
+            <a href="#contact" className="hover:text-blue-600">
+              Contact
+            </a>
+
+          </nav>
+
+      <div className="flex gap-3">
+
+            <Link
+              href="/login"
+              className="px-6 py-2.5 rounded-xl text-white bg-blue-600 hover:bg-blue-700 transition"
+            >
+              Login
+            </Link>
+
+
+            <Link
+              href="/register"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition"
+            >
+              Register
+            </Link>
 
       </div>
 
@@ -85,7 +100,7 @@ return ( <main className="min-h-screen bg-white">
 
           <Link
             href="/login"
-            className="px-8 py-4 rounded-xl border border-white/20 hover:bg-white/10"
+            className="px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-700 font-semibold"
           >
             Sign In
           </Link>
