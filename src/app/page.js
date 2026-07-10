@@ -180,7 +180,7 @@ return ( <main className="min-h-screen bg-white">
         ].map((feature) => (
           <div
             key={feature}
-            className="bg-white border border-gray-200 rounded-3xl p-8 hover:shadow-xl transition"
+            className="bg-white border border-gray-600 rounded-3xl p-8 hover:shadow-xl transition"
           >
             <h3 className="text-xl font-semibold">
               {feature}
