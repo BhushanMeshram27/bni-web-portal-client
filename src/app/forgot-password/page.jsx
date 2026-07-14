@@ -54,6 +54,14 @@ export default function ForgotPassword() {
         >
           Send Reset Link
         </button>
+
+        <button
+          type="button"
+          onClick={() => (window.location.href = "/login")}
+          className="w-full h-12 mt-3 bg-gray-300 text-black rounded-xl hover:bg-gray-500"
+        >
+          Back to Login
+        </button>
       </form>
 
     </div>

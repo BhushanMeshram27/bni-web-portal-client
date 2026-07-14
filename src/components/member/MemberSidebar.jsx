@@ -44,6 +44,12 @@ export default function MemberSidebar() {
           </Link>
         </li>
 
+         <li>
+          <Link href="/member/visitors">
+           My Visitors
+          </Link>
+        </li>
+
         <li>
           <Link href="/member/one-to-one">
             One-to-One Meetings

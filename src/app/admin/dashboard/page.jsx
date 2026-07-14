@@ -60,6 +60,13 @@ export default function AdminDashboard() {
       addActivity("👤 New member registered");
     });
 
+    socket.on("memberDeleted", () => {
+
+  fetchDashboard(token);
+
+  addActivity("🗑️ Member deleted");
+
+});
     socket.on("meetingCreated", () => {
       fetchDashboard(token);
       addActivity("📅 New meeting created");
@@ -128,6 +135,8 @@ export default function AdminDashboard() {
     // Cleanup
     return () => {
       socket.off("memberCreated");
+      socket.off("memberDeleted");
+
 
       socket.off("meetingCreated");
       socket.off("meetingUpdated");
@@ -202,7 +211,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6">
+   <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-100 to-blue-50 p-6">
 
       {/* Header */}
       <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -234,7 +243,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Welcome Banner */}
-      <div className="mb-8 rounded-3xl bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-white shadow-lg">
+      <div className="rounded-3xl bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white p-8">
         <h2 className="text-3xl font-bold">
           Welcome Back, Admin 👋
         </h2>
@@ -394,7 +403,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/admin/meetings/create"
-            className="rounded-xl bg-green-600 p-4 text-center font-medium text-white hover:bg-green-700"
+            className="rounded-2xl border p-5 hover:bg-blue-50 cursor-pointer"
           >
             Create Meeting
           </Link>

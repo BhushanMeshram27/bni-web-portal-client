@@ -24,28 +24,60 @@ export default function CreateReferralPage() {
     fetchMembers();
   }, []);
 
-  const fetchMembers = async () => {
-    try {
-      const token = localStorage.getItem("token");
+ const fetchMembers = async () => {
+  try {
 
-      const res = await axios.get(
-        `${apiRoot}/members`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+    const token = localStorage.getItem("token");
+
+
+    // Get logged-in user
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
+
+    const currentUserId = user?._id;
+
+
+    const res = await axios.get(
+      `${apiRoot}/members`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // Current logged-in member
+    const currentUser = JSON.parse(
+      localStorage.getItem("user")
+    );
+
+    // Remove logged-in member from list
+    const otherMembers = (res.data.data || [])
+      .filter(
+        (member) =>
+          member._id !== currentUserId
       );
 
-      setMembers(res.data?.members || []);
-    } catch (error) {
-      console.log("Members Error:", error);
-      setMembers([]);
-    } finally {
-      setFetching(false);
-    }
-  };
 
+    setMembers(otherMembers);
+
+
+  } catch(error) {
+
+    console.log(
+      "Members Error:",
+      error.response?.data || error.message
+    );
+
+    setMembers([]);
+
+  } finally {
+
+    setFetching(false);
+
+  }
+};
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -133,25 +165,33 @@ export default function CreateReferralPage() {
           className="w-full border p-3 rounded"
           required
         />
+<select
+  name="toMember"
+  value={formData.toMember}
+  onChange={handleChange}
+  className="w-full border p-3 rounded"
+  required
+>
 
-        {/* Members */}
-        <select
-          name="toMember"
-          value={formData.toMember}
-          onChange={handleChange}
-          className="w-full border p-3 rounded"
-          required
-        >
-          <option value="">
-            {fetching ? "Loading members..." : "Select Member"}
-          </option>
+<option value="">
+  Select Member
+</option>
 
-          {members.map((m) => (
-            <option key={m._id} value={m._id}>
-              {m.name}
-            </option>
-          ))}
-        </select>
+
+{members.map((m)=>(
+
+<option
+  key={m._id}
+  value={m._id}
+>
+  {m.name}
+  {m.businessName && ` | ${m.businessName}`}
+  {m.profession && ` | ${m.profession}`}
+</option>
+
+))}
+
+</select>
 
         {/* Details */}
         <textarea

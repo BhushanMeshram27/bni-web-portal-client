@@ -8,6 +8,7 @@ import { apiRoot } from "@/services/api";
 export default function ReceivedReferralsPage() {
   const [referrals, setReferrals] = useState([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     fetchReferrals();
@@ -51,6 +52,20 @@ export default function ReceivedReferralsPage() {
 
       <div className="bg-white rounded-xl shadow overflow-x-auto">
 
+{referrals.length === 0 ? (
+    <div className="flex flex-col items-center justify-center py-16 px-6">
+      <div className="text-6xl mb-4">📭</div>
+      <h2 className="text-2xl font-semibold text-gray-800">
+        No Referrals Received
+      </h2>
+      <p className="mt-2 text-gray-500 text-center">
+        You haven't received any referrals yet.
+      </p>
+      <p className="text-sm text-gray-400 mt-1 text-center">
+        When another member sends you a referral, it will appear here.
+      </p>
+    </div>
+  ) : (
         <table className="w-full">
 
           <thead className="bg-gray-100">
@@ -94,7 +109,7 @@ export default function ReceivedReferralsPage() {
           </tbody>
 
         </table>
-
+  )}
       </div>
 
     </div>

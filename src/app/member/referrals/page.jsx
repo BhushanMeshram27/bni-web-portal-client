@@ -24,31 +24,7 @@ export default function ReferralsPage() {
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case "Approved":
-        return (
-          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-            Approved
-          </span>
-        );
-
-      case "Rejected":
-        return (
-          <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
-            Rejected
-          </span>
-        );
-
-      default:
-        return (
-          <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
-            Pending
-          </span>
-        );
-    }
-  };
-
+  
   if (loading) {
     return <div className="p-6">Loading referrals...</div>;
   }
@@ -98,9 +74,6 @@ export default function ReferralsPage() {
                     {referral.toMember?.name || "N/A"}
                   </td>
 
-                  <td className="p-3">
-                    {getStatusBadge(referral.status)}
-                  </td>
 
                   <td className="p-3 flex gap-2">
                     <Link

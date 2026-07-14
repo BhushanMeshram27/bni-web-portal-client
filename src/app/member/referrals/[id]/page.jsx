@@ -12,6 +12,7 @@ export default function ReferralDetailsPage() {
 
   const [referral, setReferral] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [businessValue, setBusinessValue] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -42,18 +43,37 @@ export default function ReferralDetailsPage() {
   };
 
     const handleStatusUpdate = async (status) => {
-    try {
-      await updateReferralStatus(referral._id, status);
+  try {
+    const token = localStorage.getItem("token");
 
-      alert(`Referral status updated to ${status}`);
+    await axios.put(
+      `${apiRoot}/referrals/status/${referral._id}`,
+      {
+        status,
+        businessValue,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-      fetchReferral(); // Refresh the data
-    } catch (error) {
-      console.log(error);
-      alert(error.response?.data?.message || "Failed to update status");
-    }
-  };
+    alert(`Referral updated to ${status}`);
 
+    setBusinessValue("");
+
+    fetchReferral();
+
+  } catch (error) {
+    console.log(error);
+
+    alert(
+      error.response?.data?.message ||
+      "Failed to update status"
+    );
+  }
+};
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -167,14 +187,25 @@ export default function ReferralDetailsPage() {
             </button>
           )}
 
-          {referral.status === "Follow-up" && (
-            <button
-              onClick={() => handleStatusUpdate("Converted")}
-              className="bg-purple-600 text-white px-4 py-2 rounded"
-            >
-              Converted
-            </button>
-          )}
+       {referral.status === "Follow-up" && (
+  <div className="space-y-3">
+
+    <button
+      onClick={() => {
+        if (!businessValue) {
+          alert("Please enter Business Value");
+          return;
+        }
+
+        handleStatusUpdate("Converted");
+      }}
+      className="bg-purple-600 text-white px-4 py-2 rounded"
+    >
+      Convert & Save Revenue
+    </button>
+
+  </div>
+)}
 
           {referral.status === "Converted" && (
             <button
@@ -188,15 +219,7 @@ export default function ReferralDetailsPage() {
         </div>
         
 
-          <div className="pt-6">
-            <button
-              onClick={() => router.back()}
-              className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900"
-            >
-              Back
-            </button>
-          </div>
-
+         
         </div>
 
       </div>

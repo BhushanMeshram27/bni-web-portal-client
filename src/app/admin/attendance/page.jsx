@@ -13,9 +13,8 @@ const [search, setSearch] = useState("");
 const [loading, setLoading] = useState(true);
 
 useEffect(() => {
-fetchAttendance();
+  fetchAttendance();
 }, []);
-
 useEffect(() => {
 const filtered = attendance.filter((item) =>
 item.attendee?.name

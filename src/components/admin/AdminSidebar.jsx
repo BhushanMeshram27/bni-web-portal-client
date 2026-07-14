@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+
+
 export default function AdminSidebar() {
   const router = useRouter();
 
@@ -55,7 +57,7 @@ export default function AdminSidebar() {
             Attendance
           </Link>
         </li>
-          <li>
+        <li>
           <Link href="/admin/tyfcb">
             TYFCB
           </Link>
@@ -67,12 +69,19 @@ export default function AdminSidebar() {
           </Link>
         </li>
 
-        
+
         <li>
           <Link href="/admin/chapters">
             Chapters
           </Link>
         </li>
+
+        <li>
+          <Link href="/admin/contacts">
+            Contacts
+          </Link>
+        </li>
+
 
         <li>
           <Link href="/admin/change-password">

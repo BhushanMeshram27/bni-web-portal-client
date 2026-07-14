@@ -61,6 +61,7 @@ export default function MemberDashboard() {
     icon: "🤝",
     color: "text-blue-600",
     bg: "from-blue-500 to-indigo-600",
+    link: "/member/referrals",
   },
  {
   title: "Total Meetings",
@@ -68,6 +69,7 @@ export default function MemberDashboard() {
   icon: "👥",
   color: "text-cyan-600",
   bg: "from-cyan-500 to-blue-600",
+  link:"/member/meetings",
 },
   {
     title: "Meetings Attended",
@@ -75,6 +77,7 @@ export default function MemberDashboard() {
     icon: "📅",
     color: "text-purple-600",
     bg: "from-purple-500 to-pink-600",
+    link:"/member/meetings",
   },
   {
     title: "Attendance %",
@@ -82,6 +85,7 @@ export default function MemberDashboard() {
     icon: "📊",
     color: "text-orange-600",
     bg: "from-orange-500 to-red-500",
+    link:"/member/attendance",
   },
 ];
 
@@ -123,8 +127,9 @@ export default function MemberDashboard() {
       {/* Cards */}
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (
-          <div
+          <Link
             key={card.title}
+            href={card.link}
             className="rounded-3xl bg-white p-6 shadow-xl hover:-translate-y-2 transition"
           >
             <div className="flex justify-between">
@@ -141,7 +146,7 @@ export default function MemberDashboard() {
                 {card.icon}
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

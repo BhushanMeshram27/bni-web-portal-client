@@ -226,32 +226,44 @@ export default function AdminChaptersPage() {
       ) : (
         <div className="space-y-3">
           {chapters.map((chapter) => (
-            <Link
-              key={chapter._id}
-              href={`/admin/chapters/${chapter._id}`}
-              className="block rounded-lg border border-gray-200 p-4 hover:border-indigo-300 transition-colors"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">{chapter.name}</span>
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${
-                    chapter.status === "active"
-                      ? "bg-green-50 text-green-700 border-green-200"
-                      : "bg-gray-50 text-gray-600 border-gray-200"
-                  }`}
-                >
-                  {chapter.status}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                {chapter.location || "No location set"} · {chapter.meetingDay || "—"}{" "}
-                {chapter.meetingTime || ""}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                VP: {chapter.leadership?.vp?.name || "Not assigned"} · Revenue:{" "}
-                {chapter.currency} {chapter.totalRevenue?.toLocaleString() || 0}
-              </p>
-            </Link>
+  <Link
+    key={chapter._id}
+    href={`/admin/chapters/${chapter._id}`}
+    className="block rounded-lg border border-gray-200 p-4 hover:border-indigo-300 hover:shadow transition"
+  >
+    <div className="flex items-center justify-between">
+      <h2 className="text-lg font-semibold text-gray-800">
+        {chapter.name}
+      </h2>
+
+      <span
+        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+          chapter.status === "active"
+            ? "bg-green-100 text-green-700"
+            : "bg-gray-100 text-gray-600"
+        }`}
+      >
+        {chapter.status}
+      </span>
+    </div>
+
+    <div className="mt-3 space-y-1 text-sm text-gray-600">
+      <p>
+        <strong>Location:</strong>{" "}
+        {chapter.location || "Not specified"}
+      </p>
+
+      <p>
+        <strong>Meeting:</strong>{" "}
+        {chapter.meetingDay} {chapter.meetingTime}
+      </p>
+
+      <p>
+        <strong>Currency:</strong>{" "}
+        {chapter.currency}
+      </p>
+    </div>
+  </Link>
           ))}
         </div>
       )}

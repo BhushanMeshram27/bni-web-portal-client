@@ -10,12 +10,8 @@ export default function CreateAttendancePage() {
   const [submitting, setSubmitting] = useState(false);
 
   const [meetings, setMeetings] = useState([]);
-const [meeting, setMeeting] = useState({
-  title: "",
-  meetingDate: "",
-  location: "",
-}
-);
+const [meeting, setMeeting] = useState("");
+
 
   const [attendance, setAttendance] = useState([]);
 
@@ -25,33 +21,42 @@ const [meeting, setMeeting] = useState({
 }, []);
 
   const fetchMembers = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  try {
+    const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        `${apiRoot}/members`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    const res = await axios.get(`${apiRoot}/members`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      setMembers(res.data.members || []);
+    console.log("Members API:", res.data);
 
-      // default attendance = all absent
-      const initial = (res.data.members || []).map((m) => ({
-        memberId: m._id,
-        status: "Absent",
-      }));
+    // Handle different response formats
+    let membersData = [];
 
-      setAttendance(initial);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+    if (Array.isArray(res.data)) {
+      membersData = res.data;
+    } else if (Array.isArray(res.data.members)) {
+      membersData = res.data.members;
+    } else if (Array.isArray(res.data.data)) {
+      membersData = res.data.data;
     }
-  };
+
+    setMembers(membersData);
+
+    setAttendance(
+      membersData.map((member) => ({
+        memberId: member._id,
+        status: "Absent",
+      }))
+    );
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchMeetings = async () => {
   try {
@@ -167,44 +172,48 @@ const payload = {
 </select>
 
       {/* Members List */}
-      <div className="bg-white rounded-xl shadow overflow-hidden">
+<div className="bg-white rounded-xl shadow overflow-hidden">
 
-        <div className="p-4 border-b font-bold">
-          Members Attendance
+  <div className="p-4 border-b font-bold">
+    Members Attendance
+  </div>
+
+  {Array.isArray(members) && members.length > 0 ? (
+    members.map((member) => {
+      const record = attendance.find(
+        (a) => a.memberId === member._id
+      );
+
+      return (
+        <div
+          key={member._id}
+          className="flex justify-between items-center p-4 border-b"
+        >
+          <div>
+            <p className="font-semibold">{member.name}</p>
+            <p className="text-sm text-gray-500">{member.email}</p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => toggleStatus(member._id)}
+            className={`px-4 py-2 rounded-full text-white ${
+              record?.status === "Present"
+                ? "bg-green-500"
+                : "bg-red-500"
+            }`}
+          >
+            {record?.status || "Absent"}
+          </button>
         </div>
+      );
+    })
+  ) : (
+    <div className="p-4 text-center text-gray-500">
+      No members found
+    </div>
+  )}
 
-        {members.map((member) => {
-          const record = attendance.find(
-            (a) => a.memberId === member._id
-          );
-
-          return (
-            <div
-              key={member._id}
-              className="flex justify-between items-center p-4 border-b"
-            >
-              <div>
-                <p className="font-semibold">
-                  {member.name}
-                </p>
-                <p className="text-sm text-gray-500">
-                  {member.email}
-                </p>
-              </div>
-
-              <button
-                onClick={() => toggleStatus(member._id)}
-                className={`px-4 py-2 rounded-full text-sm font-bold ${
-                  record?.status === "Present"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {record?.status || "Absent"}
-              </button>
-            </div>
-          );
-        })}
       </div>
 
       {/* Submit Button */}

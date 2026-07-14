@@ -84,7 +84,7 @@ export default function EditReferralPage() {
         clientName: referral.clientName || "",
         clientMobile: referral.clientMobile || "",
         clientEmail: referral.clientEmail || "",
-        toMember: referral.toMember?._id || "",
+        toMember: referral.toMember?.name || "",
         referralDetails: referral.referralDetails || "",
       });
     } catch (error) {

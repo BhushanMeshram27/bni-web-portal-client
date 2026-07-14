@@ -49,12 +49,6 @@ const weekdays = [
   "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
 ];
 
-const positions = [
-  { key: "president", label: "President" },
-  { key: "vp", label: "VP" },
-  { key: "secretary", label: "Secretary" },
-  { key: "treasurer", label: "Treasurer" },
-];
 
 export default function AdminChapterDetailPage() {
   const { id } = useParams();
@@ -62,6 +56,8 @@ export default function AdminChapterDetailPage() {
 
   const [chapter, setChapter] = useState(null);
   const [members, setMembers] = useState([]);
+  const [assignedMembers, setAssignedMembers] = useState([]);
+const [selectedMember, setSelectedMember] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -98,28 +94,116 @@ export default function AdminChapterDetailPage() {
 
   // Load members belonging to this chapter, for the leadership dropdowns.
   // Assumes GET /api/members?chapter=<id> exists — adjust the path if yours differs.
-  const loadMembers = async () => {
-    try {
-      const token = getToken();
-      const res = await fetch(`${apiRoot}/members?chapter=${id}`, {
+ const loadMembers = async () => {
+  try {
+    const token = getToken();
+
+    const res = await fetch(`${apiRoot}/members`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    setMembers(data.data || []);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const loadAssignedMembers = async () => {
+  try {
+    const token = getToken();
+
+    const res = await fetch(
+      `${apiRoot}/chapter-members/chapter/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    setAssignedMembers(data.data || []);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const assignMember = async () => {
+  if (!selectedMember) {
+    alert("Select a member");
+    return;
+  }
+
+  try {
+    const token = getToken();
+
+    const res = await fetch(
+      `${apiRoot}/chapter-members/assign`,
+      {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          Authorization: `Bearer ${token}`,
         },
-      });
-      const data = await res.json();
-      setMembers(data.data || []);
-    } catch {
-      setMembers([]);
-    }
-  };
+        body: JSON.stringify({
+          chapter: id,
+          member: selectedMember,
+        }),
+      }
+    );
 
-  useEffect(() => {
-    if (id) {
-      loadChapter();
-      loadMembers();
+    const data = await res.json();
+
+    if (data.success) {
+      alert("Member assigned successfully");
+      setSelectedMember("");
+      loadAssignedMembers();
+    } else {
+      alert(data.message);
     }
-  }, [id]);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const removeMember = async (id) => {
+  try {
+    const token = getToken();
+
+    const res = await fetch(
+      `${apiRoot}/chapter-members/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.success) {
+      loadAssignedMembers();
+    } else {
+      alert(data.message);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+ useEffect(() => {
+  if (id) {
+    loadChapter();
+    loadMembers();
+    loadAssignedMembers();
+  }
+}, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -145,23 +229,6 @@ export default function AdminChapterDetailPage() {
     }
   };
 
-  const handleAssignLeadership = async (position, memberId) => {
-    setError("");
-    setSuccess("");
-    try {
-      const data = await apiRequest(`/${id}/leadership`, {
-        method: "PUT",
-        body: JSON.stringify({ position, memberId: memberId || null }),
-      });
-      setChapter((prev) => ({
-        ...prev,
-        leadership: { ...prev.leadership, [position]: data.data.leadership[position] },
-      }));
-      setSuccess(`${position.toUpperCase()} assignment updated.`);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
 
   const handleDelete = async () => {
     if (!window.confirm("Delete this chapter? This cannot be undone.")) return;
@@ -291,30 +358,83 @@ export default function AdminChapterDetailPage() {
         >
           {saving ? "Saving…" : "Save Changes"}
         </button>
+
+        
+
       </form>
 
-      {/* Leadership assignment */}
-      <div className="space-y-4 rounded-lg border border-gray-200 p-5">
-        <h2 className="text-sm font-semibold text-gray-900">Leadership Positions</h2>
+      {/* Assign Member */}
+<div className="rounded-lg border border-gray-200 p-5 mt-6">
 
-        {positions.map(({ key, label }) => (
-          <div key={key}>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <select
-              value={chapter.leadership?.[key]?._id || ""}
-              onChange={(e) => handleAssignLeadership(key, e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">Not assigned</option>
-              {members.map((m) => (
-                <option key={m._id} value={m._id}>
-                  {m.name} {m.businessName ? `· ${m.businessName}` : ""}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
+  <h2 className="text-lg font-semibold mb-4">
+    Assign Member
+  </h2>
+
+  <select
+    value={selectedMember}
+    onChange={(e) => setSelectedMember(e.target.value)}
+    className="w-full border rounded-lg p-3"
+  >
+    <option value="">Select Member</option>
+
+    {members.map((member) => (
+      <option key={member._id} value={member._id}>
+        {member.name} ({member.businessName})
+      </option>
+    ))}
+  </select>
+
+ <button
+  type="button"
+  onClick={assignMember}
+  className="mt-4 rounded-lg bg-green-600 px-5 py-2 text-white hover:bg-green-700"
+>
+  Assign Member
+</button>
+
+</div>
+
+{/* Assigned Members */}
+<div className="rounded-lg border border-gray-200 p-5 mt-6">
+
+  <h2 className="text-lg font-semibold mb-4">
+    Assigned Members
+  </h2>
+
+  {assignedMembers.length === 0 ? (
+  <p className="text-gray-500">
+    No members assigned.
+  </p>
+) : (
+  assignedMembers.map((item) => (
+    <div
+      key={item._id}
+      className="flex justify-between border-b py-3"
+    >
+      <div>
+        <p className="font-semibold">
+          {item.member.name}
+        </p>
+
+        <p className="text-sm text-gray-500">
+          {item.member.email}
+        </p>
       </div>
+ <button
+    type="button"
+    onClick={() => removeMember(item._id)}
+    className="rounded bg-red-600 px-3 py-1 text-white"
+  >
+    Remove
+  </button>
+    </div>
+  ))
+)}
+
+</div>
+
+      
+     
     </div>
   );
 }

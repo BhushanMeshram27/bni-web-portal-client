@@ -34,6 +34,8 @@ export default function CreateTYFCBClient() {
   const [referrals, setReferrals] = useState([]);
   const [referralsLoading, setReferralsLoading] = useState(true);
   const [referralsError, setReferralsError] = useState("");
+const [chapters, setChapters] = useState([]);
+const [selectedChapter, setSelectedChapter] = useState("");
 
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -89,6 +91,40 @@ export default function CreateTYFCBClient() {
 
     loadReferrals();
   }, []);
+
+useEffect(() => {
+  const loadChapters = async () => {
+    try {
+      const token = getToken();
+
+     const user = JSON.parse(localStorage.getItem("user"));
+
+console.log("Logged-in user:", user);
+
+const memberId = user.id || user._id;
+
+const response = await fetch(
+  `${apiRoot}/chapter-members/member/${memberId}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
+
+      const data = await response.json();
+
+      if (data.success) {
+        setChapters(data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  loadChapters();
+}, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -110,6 +146,10 @@ export default function CreateTYFCBClient() {
       setError("Revenue amount must be greater than zero.");
       return;
     }
+    if (!selectedChapter) {
+  setError("Please select a chapter.");
+  return;
+}
 
     setSubmitting(true);
 
@@ -129,9 +169,10 @@ export default function CreateTYFCBClient() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          ...form,
-          revenueAmount: amount,
-        }),
+  ...form,
+  chapter: selectedChapter,
+  revenueAmount: amount,
+}),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -140,11 +181,11 @@ export default function CreateTYFCBClient() {
         throw new Error(data.message || "Failed to submit TYFCB.");
       }
 
-      setSubmitted(true);
+     setSubmitted(true);
 
-      setTimeout(() => {
-        router.push(`/member/tyfcb/${data.data._id}`);
-      }, 1000);
+setTimeout(() => {
+  router.replace(`/member/tyfcb/${data.data._id}`);
+}, 1000);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -235,6 +276,32 @@ export default function CreateTYFCBClient() {
               to the referral it came from.
             </p>
           </div>
+
+           {/* Chapter */}
+  <div className="mb-4">
+    <label className="block mb-2 font-medium">
+      Chapter
+    </label>
+
+    <select
+      value={selectedChapter}
+      onChange={(e) => setSelectedChapter(e.target.value)}
+      className="w-full border rounded-lg p-3"
+    >
+      <option value="">Select Chapter</option>
+
+      {chapters
+  .filter((item) => item.chapter)
+  .map((item) => (
+    <option
+      key={item.chapter._id}
+      value={item.chapter._id}
+    >
+      {item.chapter.name}
+    </option>
+))}
+    </select>
+  </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2">

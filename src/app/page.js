@@ -21,9 +21,9 @@ return ( <main className="min-h-screen bg-white">
 
       <nav className="hidden md:flex items-center gap-10 text-slate-700 font-medium">
         <a href="#features">Features</a>
-        <a href="#about">About</a>
-        <a href="#success">Success Stories</a>
-        <a href="#contact">Contact</a>
+        <a href="/about">About</a>
+        <a href="/success">Success Stories</a>
+        <a href="/contact">Contact</a>
       </nav>
 
       <div className="flex items-center gap-4">

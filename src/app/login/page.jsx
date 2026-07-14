@@ -44,10 +44,8 @@ export default function LoginPage() {
 
       if (user.role === "admin") {
         router.push("/admin/dashboard");
-      } else if (user.role === "member") {
+      } else if(user.role === "member") {
         router.push("/member/dashboard");
-      } else {
-        router.push("/visitor/dashboard");
       }
     } catch (error) {
       console.error(error);
@@ -127,7 +125,7 @@ export default function LoginPage() {
 
               {/* Email */}
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-700">
+                <label className="block mb-2 text-lg font-medium text-gray-700">
                   Email Address
                 </label>
 
@@ -138,13 +136,13 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   required
-                  className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full h-14 px-4 border border-gray-300 rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
 
               {/* Password */}
               <div>
-  <label className="block mb-2 text-sm font-medium text-gray-700">
+  <label className="block mb-2 text-lg font-medium text-gray-700">
     Password
   </label>
 
@@ -156,7 +154,7 @@ export default function LoginPage() {
       onChange={handleChange}
       placeholder="Enter your password"
       required
-      className="w-full h-14 px-4 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
+      className="w-full h-14 px-4 pr-12 border border-gray-300 rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600"
     />
 
     <button
