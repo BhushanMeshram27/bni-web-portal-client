@@ -75,9 +75,9 @@ export default function CreateMemberPage() {
 
     return (
         <div className="max-w-5xl mx-auto p-6">
-            <div className="bg-white rounded-xl shadow-lg border">
+            <div className="bg-white rounded-xl shadow-lg">
 
-                <div className="border-b px-6 py-4">
+                <div className="px-6 py-4">
                     <h1 className="text-2xl font-bold text-gray-800">
                         Create Member
                     </h1>
