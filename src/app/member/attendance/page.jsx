@@ -9,6 +9,9 @@ export default function AttendancePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
+  const [totalMeetings, setTotalMeetings] = useState(0);
+const [meetingsAttended, setMeetingsAttended] = useState(0);
+const [attendancePercentage, setAttendancePercentage] = useState(0);
 
   const fetchAttendance = async () => {
     try {
@@ -35,6 +38,9 @@ export default function AttendancePage() {
       );
 
       setAttendance(res.data.attendance || []);
+setTotalMeetings(res.data.totalMeetings || 0);
+setMeetingsAttended(res.data.meetingsAttended || 0);
+setAttendancePercentage(res.data.attendancePercentage || 0);
     } catch (err) {
       console.log(err);
       setError("Failed to load attendance data");
@@ -47,18 +53,7 @@ export default function AttendancePage() {
     fetchAttendance();
   }, []);
 
-  const presentCount = attendance.filter(
-    (item) => item.status === "Present"
-  ).length;
-
-  const absentCount = attendance.filter(
-    (item) => item.status === "Absent"
-  ).length;
-
-  const attendancePercentage =
-    attendance.length > 0
-      ? Math.round((presentCount / attendance.length) * 100)
-      : 0;
+  
 
   const filteredAttendance =
   filter === "all"
@@ -119,28 +114,55 @@ export default function AttendancePage() {
 
       {/* Stats */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <StatCard label="Present" value={presentCount} color="text-green-600" />
-        <StatCard label="Absent" value={absentCount} color="text-red-600" />
-        <StatCard label="Attendance %" value={`${attendancePercentage}%`} color="text-blue-600" />
+       <StatCard
+  label="Meetings Attended"
+  value={meetingsAttended}
+  color="text-green-600"
+/>
+
+<StatCard
+  label="Total Meetings"
+  value={totalMeetings}
+  color="text-blue-600"
+/>
+
+<StatCard
+  label="Attendance %"
+  value={`${attendancePercentage}%`}
+  color="text-purple-600"
+/>
       </div>
 
       {/* Progress */}
-      <div className="bg-white rounded-3xl p-8 shadow-lg mb-8">
-        <div className="flex justify-between mb-3">
-          <h2 className="text-xl font-bold">Attendance Performance</h2>
-          <span className="font-bold text-blue-600">
-            {attendancePercentage}%
-          </span>
-        </div>
+<div className="bg-white rounded-3xl p-8 shadow-lg mb-8">
+  <div className="flex justify-between items-center mb-3">
+    <h2 className="text-xl font-bold">Attendance Performance</h2>
 
-        <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-green-500 to-blue-600"
-            style={{ width: `${attendancePercentage}%` }}
-          />
-        </div>
-      </div>
+    <span className="text-2xl font-bold text-blue-600">
+      {attendancePercentage}%
+    </span>
+  </div>
 
+  <p className="text-gray-600 mb-4">
+    Meetings Attended:
+    <span className="font-semibold text-blue-600">
+      {" "}
+      {meetingsAttended} / {totalMeetings}
+    </span>
+  </p>
+
+  <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+    <div
+      className="h-full bg-gradient-to-r from-green-500 to-blue-600 transition-all duration-700"
+      style={{
+        width: `${Math.min(
+          Math.max(attendancePercentage, 0),
+          100
+        )}%`,
+      }}
+    />
+  </div>
+</div>
       {/* Filter Dropdown */}
       <div className="mb-4 flex gap-3">
         <select
