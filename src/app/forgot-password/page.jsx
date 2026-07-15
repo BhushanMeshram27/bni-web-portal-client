@@ -50,7 +50,7 @@ export default function ForgotPassword() {
 
         <button
           type="submit"
-          className="w-full h-12 mt-5 bg-blue-300 text-white rounded-xl hover:bg-blue-800"
+          className="w-full h-12 mt-5 bg-blue-400 text-white rounded-xl hover:bg-blue-800"
         >
           Send Reset Link
         </button>
@@ -58,7 +58,7 @@ export default function ForgotPassword() {
         <button
           type="button"
           onClick={() => (window.location.href = "/login")}
-          className="w-full h-12 mt-3 bg-gray-300 text-black rounded-xl hover:bg-gray-500"
+          className="w-full h-12 mt-3 bg-gray-400 text-black rounded-xl hover:bg-gray-800"
         >
           Back to Login
         </button>
