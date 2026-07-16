@@ -12,20 +12,20 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   const [stats, setStats] = useState({
-  totalMembers: 0,
-  totalMeetings: 0,
-  totalReferrals: 0,
-  totalVisitors: 0,
+    totalMembers: 0,
+    totalMeetings: 0,
+    totalReferrals: 0,
+    totalVisitors: 0,
 
-  totalRecords: 0,
-  totalPresent: 0,
-  totalAbsent: 0,
-  attendancePercentage: 0,
+    totalRecords: 0,
+    totalPresent: 0,
+    totalAbsent: 0,
+    attendancePercentage: 0,
 
-  approvedReferrals: 0,
-  pendingReferrals: 0,
-  rejectedReferrals: 0,
-});
+    approvedReferrals: 0,
+    pendingReferrals: 0,
+    rejectedReferrals: 0,
+  });
 
   const [meetings, setMeetings] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -62,11 +62,11 @@ export default function AdminDashboard() {
 
     socket.on("memberDeleted", () => {
 
-  fetchDashboard(token);
+      fetchDashboard(token);
 
-  addActivity("🗑️ Member deleted");
+      addActivity("🗑️ Member deleted");
 
-});
+    });
     socket.on("meetingCreated", () => {
       fetchDashboard(token);
       addActivity("📅 New meeting created");
@@ -211,7 +211,7 @@ export default function AdminDashboard() {
   }
 
   return (
-   <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-100 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-slate-100 to-blue-50 p-6">
 
       {/* Header */}
       <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -302,18 +302,19 @@ export default function AdminDashboard() {
 
       <div className="mb-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-xl transition">
+<Link href="/admin/attendance">
+  <div className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-xl transition cursor-pointer">
+    <p className="text-sm text-gray-500">
+      Total Records
+    </p>
 
-          <p className="text-sm text-gray-500">
-            Total Records
-          </p>
+    <h2 className="mt-3 text-4xl font-bold text-indigo-600">
+      {stats.totalRecords}
+    </h2>
+  </div>
+</Link>
 
-          <h2 className="mt-3 text-4xl font-bold text-indigo-600">
-            {stats.totalRecords}
-          </h2>
-
-        </div>
-
+<Link href="/admin/attendance">
         <div className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-xl transition">
 
           <p className="text-sm text-gray-500">
@@ -325,7 +326,9 @@ export default function AdminDashboard() {
           </h2>
 
         </div>
+        </Link>
 
+<Link href="/admin/attendance">
         <div className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-xl transition">
 
           <p className="text-sm text-gray-500">
@@ -337,7 +340,10 @@ export default function AdminDashboard() {
           </h2>
 
         </div>
+        </Link>
 
+
+<Link href="/admin/attendance">
         <div className="rounded-2xl bg-white p-6 shadow-sm hover:shadow-xl transition">
 
           <p className="text-sm text-gray-500">
@@ -349,6 +355,7 @@ export default function AdminDashboard() {
           </h2>
 
         </div>
+        </Link>
 
       </div>
 
