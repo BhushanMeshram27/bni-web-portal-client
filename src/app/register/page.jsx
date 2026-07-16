@@ -20,7 +20,7 @@ export default function RegisterPage() {
     mobile: "",
     password: "",
     confirmPassword: "",
-    role: "visitor",
+    role: "member",
     chapter: "",
 
   });
@@ -111,7 +111,7 @@ export default function RegisterPage() {
           email,
           mobile,
           password: formData.password,
-          role: formData.role,
+          role: "member",
         }),
       });
 
@@ -327,26 +327,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-lg font-medium mb-2">
-                Select Role
-              </label>
-
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full h-14 px-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                <option value="visitor">
-                  Visitor
-                </option>
-
-                <option value="member">
-                  Member
-                </option>
-              </select>
-            </div>
+           
 
             <div className="md:col-span-2">
               <label className="flex items-center gap-3 text-sm text-gray-600">
