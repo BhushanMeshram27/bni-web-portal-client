@@ -4,6 +4,21 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { apiRoot } from "@/services/api";
+import PageContainer from "@/components/layout/PageContainer";
+import PageHeader from "@/components/layout/PageHeader";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import EmptyState from "@/components/ui/EmptyState";
+import { PageLoader } from "@/components/ui/Spinner";
+import Table, {
+  TableHead,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@/components/ui/Table";
+import { Handshake } from "lucide-react";
 
 export default function AdminReferralsPage() {
   const [referrals, setReferrals] = useState([]);
@@ -16,16 +31,9 @@ export default function AdminReferralsPage() {
   const fetchReferrals = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      const res = await axios.get(
-        `${apiRoot}/referrals/admin/all`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const res = await axios.get(`${apiRoot}/referrals/admin/all`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setReferrals(res.data.referrals || []);
     } catch (error) {
       console.error(error);
@@ -34,83 +42,53 @@ export default function AdminReferralsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="p-6 text-center text-lg">
-        Loading referrals...
-      </div>
-    );
-  }
+  const statusVariant = (status) => {
+    if (status === "Approved") return "success";
+    if (status === "Rejected") return "danger";
+    return "pending";
+  };
+
+  if (loading) return <PageLoader message="Loading referrals..." />;
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">
-          All Referrals
-        </h1>
-      </div>
+    <PageContainer>
+      <PageHeader
+        title="All Referrals"
+        subtitle={`${referrals.length} total referrals`}
+      />
 
-      <div className="bg-white rounded-xl shadow overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-4 text-left">Client Name</th>
-              <th className="p-4 text-left">Mobile</th>
-              <th className="p-4 text-left">To Member</th>
-              <th className="p-4 text-left">Status</th>
-              <th className="p-4 text-center">Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {referrals.length > 0 ? (
-              referrals.map((referral) => (
-                <tr key={referral._id} className="border-t hover:bg-gray-50">
-                  <td className="p-4">{referral.clientName}</td>
-
-                  <td className="p-4">{referral.clientMobile}</td>
-
-                  <td className="p-4">
-                    {referral.toMember?.name || "N/A"}
-                  </td>
-
-                  <td className="p-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        referral.status === "Approved"
-                          ? "bg-green-100 text-green-700"
-                          : referral.status === "Rejected"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {referral.status}
-                    </span>
-                  </td>
-
-                  <td className="p-4 text-center">
-                    <Link
-                      href={`/admin/referrals/${referral._id}`}
-                      className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    >
-                      View
+      <Card padding={false}>
+        {referrals.length === 0 ? (
+          <EmptyState title="No referrals found" icon={Handshake} />
+        ) : (
+          <Table>
+            <TableHead>
+              <TableHeader>Client Name</TableHeader>
+              <TableHeader>Mobile</TableHeader>
+              <TableHeader>To Member</TableHeader>
+              <TableHeader>Status</TableHeader>
+              <TableHeader className="text-center">Action</TableHeader>
+            </TableHead>
+            <TableBody>
+              {referrals.map((referral) => (
+                <TableRow key={referral._id}>
+                  <TableCell className="font-medium text-slate-800">{referral.clientName}</TableCell>
+                  <TableCell>{referral.clientMobile}</TableCell>
+                  <TableCell>{referral.toMember?.name || "N/A"}</TableCell>
+                  <TableCell>
+                    <Badge variant={statusVariant(referral.status)}>{referral.status}</Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Link href={`/admin/referrals/${referral._id}`}>
+                      <Button size="sm">View</Button>
                     </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={5}
-                  className="p-6 text-center text-gray-500"
-                >
-                  No referrals found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </Card>
+    </PageContainer>
   );
 }

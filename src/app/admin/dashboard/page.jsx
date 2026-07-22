@@ -225,21 +225,7 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/admin/change-password"
-            className="rounded-xl bg-blue-600 px-5 py-3 font-medium text-white shadow hover:bg-blue-700"
-          >
-            Change Password
-          </Link>
-
-          <button
-            onClick={handleLogout}
-            className="rounded-xl bg-red-600 px-5 py-3 font-medium text-white shadow hover:bg-red-700"
-          >
-            Logout
-          </button>
-        </div>
+        
       </div>
 
       {/* Welcome Banner */}
