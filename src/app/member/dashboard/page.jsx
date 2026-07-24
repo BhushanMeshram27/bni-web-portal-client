@@ -5,18 +5,30 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import { apiRoot } from "@/services/api";
+import {
+  Handshake,
+  Users,
+  CalendarDays,
+  ChartColumn,
+  UserRound,
+  LockKeyhole,
+} from "lucide-react";
+import MemberPageShell, {
+  MemberPageHero,
+  MemberPageLoading,
+  MemberPageSection,
+
+} from "@/components/layout/MemberPageShell";
 
 export default function MemberDashboard() {
   const router = useRouter();
-
   const [loading, setLoading] = useState(true);
-
   const [stats, setStats] = useState({
-  totalReferrals: 0,
-  totalMeetings: 0,
-  meetingsAttended: 0,
-  attendancePercentage: 0,
-});
+    totalReferrals: 0,
+    totalMeetings: 0,
+    meetingsAttended: 0,
+    attendancePercentage: 0,
+  });
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -27,26 +39,20 @@ export default function MemberDashboard() {
     }
 
     fetchDashboard(token);
-  }, []);
+  }, [router]);
 
   const fetchDashboard = async (token) => {
     try {
-      const res = await axios.get(
-        `${apiRoot}/member/dashboard`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${apiRoot}/member/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-     setStats({
-  totalReferrals: res.data.totalReferrals || 0,
-  totalMeetings: res.data.totalMeetings || 0,
-  meetingsAttended: res.data.meetingsAttended || 0,
-  attendancePercentage: res.data.attendancePercentage || 0,
-});
-
+      setStats({
+        totalReferrals: res.data.totalReferrals || 0,
+        totalMeetings: res.data.totalMeetings || 0,
+        meetingsAttended: res.data.meetingsAttended || 0,
+        attendancePercentage: res.data.attendancePercentage || 0,
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -54,155 +60,147 @@ export default function MemberDashboard() {
     }
   };
 
- const cards = [
-  {
-    title: "Total Referrals",
-    value: stats.totalReferrals,
-    icon: "🤝",
-    color: "text-blue-600",
-    bg: "from-blue-500 to-indigo-600",
-    link: "/member/referrals",
-  },
- {
-  title: "Total Meetings",
-  value: stats.totalMeetings,
-  icon: "👥",
-  color: "text-cyan-600",
-  bg: "from-cyan-500 to-blue-600",
-  link:"/member/meetings",
-},
-  {
-    title: "Meetings Attended",
-    value: stats.meetingsAttended,
-    icon: "📅",
-    color: "text-purple-600",
-    bg: "from-purple-500 to-pink-600",
-    link:"/member/meetings",
-  },
-  {
-    title: "Attendance %",
-    value: `${stats.attendancePercentage}%`,
-    icon: "📊",
-    color: "text-orange-600",
-    bg: "from-orange-500 to-red-500",
-    link:"/member/attendance",
-  },
-];
+  const cards = [
+    {
+      title: "Total Referrals",
+      value: stats.totalReferrals,
+      icon: Handshake,
+      accent: "text-blue-600",
+      link: "/member/referrals",
+    },
+    {
+      title: "Total Meetings",
+      value: stats.totalMeetings,
+      icon: Users,
+      accent: "text-cyan-600",
+      link: "/member/meetings",
+    },
+    {
+      title: "Meetings Attended",
+      value: stats.meetingsAttended,
+      icon: CalendarDays,
+      accent: "text-purple-600",
+      link: "/member/meetings",
+    },
+    {
+      title: "Attendance %",
+      value: `${stats.attendancePercentage}%`,
+      icon: ChartColumn,
+      accent: "text-orange-600",
+      link: "/member/attendance",
+    },
+  ];
+
+  const quickActions = [
+    {
+      href: "/member/referrals",
+      label: "My Referrals",
+      icon: Handshake,
+      color: "bg-blue-600 hover:bg-blue-700",
+    },
+    {
+      href: "/member/visitors",
+      label: "My Visitors",
+      icon: UserRound,
+      color: "bg-emerald-600 hover:bg-emerald-700",
+    },
+    {
+      href: "/member/attendance",
+      label: "Attendance",
+      icon: ChartColumn,
+      color: "bg-purple-600 hover:bg-purple-700",
+    },
+    {
+      href: "/member/change-password",
+      label: "Change Password",
+      icon: LockKeyhole,
+      color: "bg-orange-500 hover:bg-orange-600",
+    },
+  ];
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <div className="text-center">
-          <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-          <p className="mt-4 text-lg font-semibold text-gray-600">
-            Loading Dashboard...
-          </p>
-        </div>
-      </div>
-    );
+    return <MemberPageLoading label="Loading Dashboard..." />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-4 md:p-8">
+    <MemberPageShell>
+      <MemberPageHero
+        eyebrow="BNI Member Portal"
+        title="Welcome Back"
+        description="Track referrals, visitors, attendance, and networking performance from one place."
+      />
 
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 p-8 md:p-12 shadow-2xl">
-        <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
+     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+  {cards.map((card) => {
+    const Icon = card.icon;
 
-        <div className="relative z-10">
-          <p className="uppercase tracking-[5px] text-blue-100 text-sm">
-            BNI MEMBER PORTAL
-          </p>
+    return (
+      <Link
+        key={card.title}
+        href={card.link}
+        className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-6"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-slate-500">
+              {card.title}
+            </p>
 
-          <h1 className="mt-3 text-4xl md:text-5xl font-bold text-white">
-            Welcome Back 👋
-          </h1>
+            <p
+              className={`mt-2 text-3xl font-bold tracking-tight sm:text-4xl ${card.accent}`}
+            >
+              {card.value}
+            </p>
+          </div>
 
-          <p className="mt-4 max-w-2xl text-blue-100">
-            Track referrals, visitors, attendance and networking performance.
-          </p>
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+            <Icon className={`h-7 w-7 ${card.accent}`} />
+          </div>
         </div>
-      </div>
-
-      {/* Cards */}
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card) => (
-          <Link
-            key={card.title}
-            href={card.link}
-            className="rounded-3xl bg-white p-6 shadow-xl hover:-translate-y-2 transition"
-          >
-            <div className="flex justify-between">
-              <div>
-                <p className="text-sm text-gray-500">{card.title}</p>
-                <h2 className={`mt-3 text-5xl font-bold ${card.color}`}>
-                  {card.value}
-                </h2>
-              </div>
-
-              <div
-                className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-r ${card.bg} text-white text-3xl`}
-              >
-                {card.icon}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Attendance Performance */}
-<div className="mt-8 rounded-3xl bg-white p-8 shadow-xl">
-  <div className="flex justify-between items-center">
-    <div>
-      <h2 className="text-2xl font-bold">
-        Attendance Performance
-      </h2>
-
-      <p className="mt-1 text-gray-500">
-        Meetings Attended:{" "}
-        <span className="font-semibold text-indigo-600">
-           {stats.meetingsAttended} / {stats.totalMeetings}
-        </span>
-      </p>
-    </div>
-
-    <span className="text-3xl font-bold text-indigo-600">
-      {stats.attendancePercentage}%
-    </span>
-  </div>
-
-  <div className="mt-6 h-5 overflow-hidden rounded-full bg-gray-200">
-    <div
-      className="h-full rounded-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 transition-all duration-700"
-      style={{
-        width: `${Math.min(Math.max(stats.attendancePercentage, 0), 100)}%`,
-      }}
-    />
-  </div>
+      </Link>
+    );
+  })}
 </div>
-      {/* Quick Actions */}
-      <div className="mt-8 rounded-3xl bg-white p-8 shadow-xl">
-        <h2 className="mb-6 text-2xl font-bold">Quick Actions</h2>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <Link href="/member/referrals" className="bg-blue-600 text-white p-6 rounded-3xl text-center">
-            🤝 My Referrals
-          </Link>
-
-          <Link href="/member/visitors" className="bg-green-600 text-white p-6 rounded-3xl text-center">
-            👥 My Visitors
-          </Link>
-
-          <Link href="/member/attendance" className="bg-purple-600 text-white p-6 rounded-3xl text-center">
-            📊 Attendance
-          </Link>
-
-          <Link href="/member/change-password" className="bg-orange-500 text-white p-6 rounded-3xl text-center">
-            🔒 Change Password
-          </Link>
+      <MemberPageSection
+        title="Attendance Performance"
+        description={`Meetings attended: ${stats.meetingsAttended} of ${stats.totalMeetings}`}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-sm text-slate-500">Overall attendance rate</p>
+          <span className="text-2xl font-bold text-indigo-600 sm:text-3xl">
+            {stats.attendancePercentage}%
+          </span>
         </div>
-      </div>
 
-    </div>
+        <div className="mt-4 h-3 overflow-hidden rounded-full bg-slate-100">
+          <div
+            className="h-full rounded-full bg-linear-to-r from-blue-500 via-indigo-500 to-purple-600 transition-all duration-700"
+            style={{
+              width: `${Math.min(Math.max(stats.attendancePercentage, 0), 100)}%`,
+            }}
+          />
+        </div>
+      </MemberPageSection>
+
+      <MemberPageSection title="Quick Actions">
+  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    {quickActions.map((action) => {
+      const Icon = action.icon;
+
+      return (
+        <Link
+          key={action.href}
+          href={action.href}
+          className={`flex flex-col items-center justify-center gap-2 rounded-2xl px-4 py-6 text-center text-sm font-semibold text-white transition ${action.color}`}
+        >
+          <Icon className="h-8 w-8" />
+          <span>{action.label}</span>
+        </Link>
+      );
+    })}
+  </div>
+</MemberPageSection>
+    </MemberPageShell>
   );
 }

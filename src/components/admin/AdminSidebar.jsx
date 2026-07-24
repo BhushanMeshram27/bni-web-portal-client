@@ -43,11 +43,28 @@ const navSections = [
     label: "Account",
     items: [
       { href: "/admin/change-password", label: "Change Password", icon: KeyRound },
+      { href: null, label: "Logout", icon: LogOut, action: "logout" },
     ],
   },
 ];
 
-function NavLink({ href, label, icon: Icon, active, onNavigate }) {
+function NavLink({ href, label, icon: Icon, active, onNavigate, onLogout }) {
+  if (label === "Logout") {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          onNavigate?.();
+          onLogout?.();
+        }}
+        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+      >
+        <Icon className="h-4 w-4 shrink-0" />
+        {label}
+      </button>
+    );
+  }
+
   return (
     <Link
       href={href}
@@ -117,8 +134,9 @@ export default function AdminSidebar({ open, onClose }) {
                   <li key={item.href}>
                     <NavLink
                       {...item}
-                      active={isActive(item.href)}
+                      active={item.href ? isActive(item.href) : false}
                       onNavigate={onClose}
+                      onLogout={handleLogout}
                     />
                   </li>
                 ))}
@@ -127,16 +145,6 @@ export default function AdminSidebar({ open, onClose }) {
           ))}
         </nav>
 
-        <div className="border-t border-white/10 p-4">
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
-        </div>
       </aside>
     </>
   );

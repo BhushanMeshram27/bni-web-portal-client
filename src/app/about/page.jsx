@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { apiRoot } from "@/services/api";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 // Base URL for all API calls made from this page.
 // Set NEXT_PUBLIC_API_ROOT in your .env file, falls back to same-origin /api during local dev.
@@ -88,18 +89,19 @@ export default function AboutPage() {
   }, []);
 
   return (
+    <SiteLayout>
     <main className="bg-[#FAF9F7] text-[#1A1A1A]">
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-black/5 px-6 pt-28 pb-24 md:px-12">
         <NetworkBackdrop />
         <div className="relative mx-auto max-w-4xl text-center">
-          <span className="inline-block rounded-full border border-[#1A2A5E]/20bg-[#1A2A5E]/5 px-4 py-1 text-xs font-semibold tracking-wide text-[#1A2A5E] uppercase">
+          <span className="inline-block rounded-full border border-[#1A2A5E]/20bg-[#1A2A5E]/5 px-4 py-1 text-xs font-semibold tracking-wide text-blue-600 uppercase">
             About BNI Portal
           </span>
           <h1 className="mt-6 font-[Sora,sans-serif] text-4xl font-bold leading-tight md:text-6xl">
             Referrals aren&apos;t luck.
             <br />
-            <span className="text-[#1A2A5E]">They&apos;re a system.</span>
+            <span className="text-blue-600">They&apos;re a system.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[#4B4B4B]">
             BNI Portal is the digital backbone for BNI chapters — one place to track referrals,
@@ -109,13 +111,13 @@ export default function AboutPage() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => router.push("/register")}
-              className="rounded-lg bg-[#1A2A5E] px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-[#142047]"
+              className="rounded-lg bg-blue-600 hover:bg-blue-700 px-6 py-3 font-semibold text-white shadow-sm transition hover:bg-[#142047]"
             >
               Join a Chapter
             </button>
             <button
               onClick={() => router.push("/login")}
-              className="rounded-lg border border-black/10 bg-white px-6 py-3 font-semibold text-[#1A1A1A] transition hover:border-black/20"
+              className="rounded-lg bg-blue-600 hover:bg-blue-700] px-6 py-3 font-semibold text-white transition hover:border-black/20"
             >
               Sign In
             </button>
@@ -132,7 +134,7 @@ export default function AboutPage() {
         >
           {stats.map((stat) => (
             <div key={stat.label}>
-              <div className="font-[Sora,sans-serif] text-3xl font-bold text-[#1A2A5E] md:text-4xl">
+              <div className="font-[Sora,sans-serif] text-3xl font-bold text-blue-600 md:text-4xl">
                 {stat.value}
               </div>
               <div className="mt-1 text-sm text-[#6B7280]">{stat.label}</div>
@@ -186,8 +188,8 @@ export default function AboutPage() {
           <div className="mt-12 space-y-10 border-l-2 border-[#D4A017]/40 pl-8">
             {TIMELINE.map((item) => (
               <div key={item.year} className="relative">
-                <span className="absolute -left-[38px] top-1 h-3 w-3 rounded-full bg-[#1A2A5E]" />
-                <h3 className="font-[Sora,sans-serif] text-lg font-semibold text-[#1A2A5E]">
+                <span className="absolute -left-[38px] top-1 h-3 w-3 rounded-full bg-blue-600" />
+                <h3 className="font-[Sora,sans-serif] text-lg font-semibold text-blue-600">
                   {item.year}
                 </h3>
                 <p className="mt-1 text-[#4B4B4B]">{item.copy}</p>
@@ -216,6 +218,7 @@ export default function AboutPage() {
         </div>
       </section>
     </main>
+    </SiteLayout>
   );
 }
 

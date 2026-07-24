@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiRoot } from "@/services/api";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 export default function ContactPage() {
 
@@ -181,8 +182,8 @@ export default function ContactPage() {
 
 
   return (
-
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-5 py-12">
+    <SiteLayout>
+    <main className="min-h-[calc(100vh-5rem)] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-5 py-12">
 
 
       <div className="mx-auto max-w-xl rounded-3xl bg-white p-8 shadow-xl">
@@ -318,9 +319,7 @@ export default function ContactPage() {
       Member
     </option>
 
-    <option value="admin">
-      Admin
-    </option>
+    
 
   </select>
 
@@ -404,7 +403,7 @@ export default function ContactPage() {
 
 
     </main>
-
+    </SiteLayout>
   );
 
 }

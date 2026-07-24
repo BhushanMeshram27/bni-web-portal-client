@@ -128,7 +128,7 @@ export default function EditOneToOnePage() {
   return (
     <div className="max-w-lg mx-auto px-4 py-8">
       <Link
-        href={`/member/onetoone/${id}`}
+        href={`/member/one-to-one/${id}`}
         className="text-sm text-indigo-600 hover:underline"
       >
         ← Back to meeting

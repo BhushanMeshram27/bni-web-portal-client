@@ -18,6 +18,7 @@ export default function EditMeeting() {
     title: "",
     meetingDate: "",
     location: "",
+    description:"",
   });
 
   useEffect(() => {
@@ -113,6 +114,19 @@ export default function EditMeeting() {
           setFormData({
             ...formData,
             location: e.target.value,
+          })
+        }
+      />
+
+       <input
+        type="text"
+        value={formData.description}
+        className="w-full border p-3 rounded-lg"
+        placeholder="Enter description about meeting"
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            description: e.target.value,
           })
         }
       />

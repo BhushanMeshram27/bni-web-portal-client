@@ -30,22 +30,29 @@ export default function EditReferralPage() {
     }
   }, [id]);
 
-  const fetchMembers = async () => {
+ const fetchMembers = async () => {
   try {
     const token = localStorage.getItem("token");
 
-    const res = await axios.get(
-      `${apiRoot}/members`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    const user = JSON.parse(localStorage.getItem("user"));
+    const currentUserId = user?._id;
+
+    const res = await axios.get(`${apiRoot}/members`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("Members API:", res.data);
+
+    const otherMembers = (res.data.data || []).filter(
+      (member) => member._id !== currentUserId
     );
 
-    setMembers(res.data.members || []);
-  } catch (err) {
-    console.log(err);
+    setMembers(otherMembers);
+  } catch (error) {
+    console.log("Members Error:", error.response?.data || error.message);
+    setMembers([]);
   }
 };
 
@@ -63,7 +70,8 @@ export default function EditReferralPage() {
       );
       const referral = res.data.referral;
 
-
+console.log("Referral:", referral);
+console.log("Referral toMember:", referral.toMember);
       if (
         referral.status === "Approved" ||
         referral.status === "Rejected"
@@ -79,14 +87,13 @@ export default function EditReferralPage() {
         return;
       }
 
-      setFormData({
-        
-        clientName: referral.clientName || "",
-        clientMobile: referral.clientMobile || "",
-        clientEmail: referral.clientEmail || "",
-        toMember: referral.toMember?.name || "",
-        referralDetails: referral.referralDetails || "",
-      });
+setFormData({
+  toMember: referral.toMember?._id || "",
+  clientName: referral.clientName || "",
+  clientMobile: referral.clientMobile || "",
+  clientEmail: referral.clientEmail || "",
+  referralDetails: referral.referralDetails || "",
+});
     } catch (error) {
       console.log(error);
       alert("Failed to load referral");
@@ -108,22 +115,20 @@ export default function EditReferralPage() {
       const token = localStorage.getItem("token");
       console.log("TOKEN:", token);
       await axios.put(
-        `${apiRoot}/referrals/${id}`,
-
-        {
-          toMember: formData.toMember,
-          clientName: formData.clientName,
-          clientEmail: formData.clientEmail,
-          clientMobile: formData.clientMobile,
-          toMember: formData.toMember,
-          referralDetails: formData.referralDetails,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  `${apiRoot}/referrals/${id}`,
+  {
+    toMember: formData.toMember,
+    clientName: formData.clientName,
+    clientMobile: formData.clientMobile,
+    clientEmail: formData.clientEmail,
+    referralDetails: formData.referralDetails,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
       alert("Referral updated successfully");
 
       router.push("/member/referrals");
@@ -205,14 +210,21 @@ export default function EditReferralPage() {
               To Member
             </label>
 
-            <input
-              type="text"
-              name="toMember"
-              value={formData.toMember}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-3"
-              required
-            />
+            <select
+  name="toMember"
+  value={formData.toMember}
+  onChange={handleChange}
+  className="w-full border rounded-lg p-3"
+  required
+>
+  <option value="">Select Member</option>
+
+  {members.map((m) => (
+    <option key={m._id} value={m._id}>
+      {m.name} {m.businessName && `| ${m.businessName}`}
+    </option>
+  ))}
+</select>
           </div>
 
           <div>

@@ -157,12 +157,15 @@ export default function CreateReferralPage() {
 
         {/* Mobile */}
         <input
-          type="text"
+          type="tel"
           name="clientMobile"
           placeholder="Client Mobile"
           value={formData.clientMobile}
           onChange={handleChange}
           className="w-full border p-3 rounded"
+          pattern="[6-9][0-9]{9}"
+          maxLength={10}
+          title="Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9"
           required
         />
 <select

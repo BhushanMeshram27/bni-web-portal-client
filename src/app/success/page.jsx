@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 
 const STORIES = [
@@ -77,41 +78,30 @@ const router = useRouter();
 
 return (
 
-<main className="min-h-screen bg-[#FAF9F7] text-[#1A1A1A]">
+<SiteLayout>
+<main className="min-h-[calc(100vh-5rem)] bg-[#FAF9F7] text-[#1A1A1A]">
 
 
 {/* Hero */}
+<section className="pt-20 pb-28 bg-linear-to-br from-slate-900 via-blue-900 to-indigo-900 text-white">
+  <div className="container mx-auto px-6 flex flex-col items-center text-center">
+    <h1 className="text-5xl font-bold">
+      Success Stories
+    </h1>
 
-<section className="bg-[#1A2A5E] px-6 py-24 text-center text-white">
+    <p className="mt-5 max-w-2xl text-lg text-white/80">
+      Discover how BNI members grow their businesses,
+      build relationships, and achieve success through
+      the power of referrals.
+    </p>
 
-
-<h1 className="text-5xl font-bold">
-Success Stories
-</h1>
-
-
-<p className="mx-auto mt-5 max-w-2xl text-lg text-white/80">
-
-Discover how BNI members grow their businesses,
-build relationships, and achieve success through
-the power of referrals.
-
-</p>
-
-
-<button
-
-onClick={()=>router.push("/register")}
-
-className="mt-8 rounded-lg bg-[#D4A017] px-8 py-3 font-semibold text-[#1A1A1A] hover:bg-[#C29215]"
-
->
-
-Join Our Network
-
-</button>
-
-
+    <button
+      onClick={() => router.push("/register")}
+      className="mt-8 rounded-lg bg-[#D4A017] px-8 py-3 font-semibold text-[#1A1A1A] hover:bg-[#C29215]"
+    >
+      Join Our Network
+    </button>
+  </div>
 </section>
 
 
@@ -138,7 +128,7 @@ className="rounded-2xl bg-white p-6 text-center shadow-sm"
 >
 
 
-<h2 className="text-4xl font-bold text-[#1A2A5E]">
+<h2 className="text-4xl font-bold text-blue-600">
 
 {item.value}
 
@@ -210,7 +200,7 @@ className="rounded-3xl border bg-white p-8 shadow-sm hover:shadow-lg transition"
 <div className="flex items-center gap-4">
 
 
-<div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#1A2A5E] text-xl font-bold text-white">
+<div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white">
 
 {story.name.charAt(0)}
 
@@ -241,7 +231,7 @@ className="rounded-3xl border bg-white p-8 shadow-sm hover:shadow-lg transition"
 
 <div className="mt-5">
 
-<span className="rounded-full bg-[#D4A017]/20 px-3 py-1 text-sm text-[#1A2A5E]">
+<span className="rounded-full bg-[#D4A017]/20 px-3 py-1 text-sm text-blue-600">
 
 {story.chapter}
 
@@ -255,7 +245,7 @@ className="rounded-3xl border bg-white p-8 shadow-sm hover:shadow-lg transition"
 </p>
 
 
-<h4 className="mt-5 font-bold text-[#1A2A5E]">
+<h4 className="mt-5 font-bold text-blue-600">
 
 {story.stats}
 
@@ -395,6 +385,7 @@ Become A Member
 
 
 </main>
+</SiteLayout>
 
 );
 

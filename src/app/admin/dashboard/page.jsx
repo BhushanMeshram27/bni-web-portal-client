@@ -396,7 +396,7 @@ export default function AdminDashboard() {
 
           <Link
             href="/admin/meetings/create"
-            className="rounded-2xl border p-5 hover:bg-blue-50 cursor-pointer"
+            className="rounded-xl p-4 bg-purple-600 text-center font-medium text-white hover:bg-purple-700"
           >
             Create Meeting
           </Link>

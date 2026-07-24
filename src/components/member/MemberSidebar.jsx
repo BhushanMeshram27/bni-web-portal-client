@@ -48,11 +48,28 @@ const navSections = [
     label: "Account",
     items: [
       { href: "/member/change-password", label: "Change Password", icon: KeyRound },
+      { href: null, label: "Logout", icon: LogOut, action: "logout" },
     ],
   },
 ];
 
-function NavLink({ href, label, icon: Icon, active, onNavigate }) {
+function NavLink({ href, label, icon: Icon, active, onNavigate, onLogout }) {
+  if (label === "Logout") {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          onNavigate?.();
+          onLogout?.();
+        }}
+        className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+      >
+        <Icon className="h-4 w-4 shrink-0" />
+        {label}
+      </button>
+    );
+  }
+
   return (
     <Link
       href={href}
@@ -79,10 +96,32 @@ export default function MemberSidebar({ open, onClose }) {
     router.push("/login");
   };
 
-  const isActive = (href) =>
-    pathname === href ||
-    (href !== "/member/dashboard" && pathname.startsWith(href));
+  const isActive = (href) => {
+  // Dashboard
+  if (href === "/member/dashboard") {
+    return pathname === href;
+  }
 
+  // Referrals
+  if (href === "/member/referrals") {
+    return (
+      pathname === "/member/referrals" ||
+      pathname === "/member/referrals/create" ||
+      pathname.startsWith("/member/referrals/edit/")
+    );
+  }
+
+  // Received Referrals
+  if (href === "/member/referrals/received") {
+    return (
+      pathname === "/member/referrals/received" ||
+      pathname.startsWith("/member/referrals/received/")
+    );
+  }
+
+  // Default for other routes
+  return pathname === href || pathname.startsWith(href + "/");
+};
   return (
     <>
       {open && (
@@ -123,8 +162,9 @@ export default function MemberSidebar({ open, onClose }) {
                   <li key={item.href}>
                     <NavLink
                       {...item}
-                      active={isActive(item.href)}
+                      active={item.href ? isActive(item.href) : false}
                       onNavigate={onClose}
+                      onLogout={handleLogout}
                     />
                   </li>
                 ))}
@@ -133,16 +173,6 @@ export default function MemberSidebar({ open, onClose }) {
           ))}
         </nav>
 
-        <div className="border-t border-white/10 p-4">
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-500/10"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
-        </div>
       </aside>
     </>
   );

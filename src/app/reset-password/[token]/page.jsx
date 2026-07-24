@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { apiRoot } from "@/services/api";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 export default function ResetPasswordPage() {
   const { token } = useParams();
@@ -20,55 +21,46 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const res = await axios.post(
-        `${apiRoot}/auth/reset-password/${token}`,
-        { password }
-      );
+      const res = await axios.post(`${apiRoot}/auth/reset-password/${token}`, { password });
 
       alert(res.data.message);
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        "Something went wrong"
-      );
+      alert(error.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md"
-      >
-        <h1 className="text-3xl font-bold mb-6">
-          Reset Password
-        </h1>
-
-        <input
-          type="password"
-          placeholder="New Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full h-12 border rounded-lg px-4 mb-4"
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full h-12 border rounded-lg px-4 mb-4"
-          required
-        />
-
-        <button
-          type="submit"
-          className="w-full h-12 bg-blue-600 text-white rounded-lg"
+    <SiteLayout>
+      <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center bg-slate-100 px-4 py-10">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md"
         >
-          Reset Password
-        </button>
-      </form>
-    </div>
+          <h1 className="text-3xl font-bold mb-6">Reset Password</h1>
+
+          <input
+            type="password"
+            placeholder="New Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full h-12 border rounded-lg px-4 mb-4"
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full h-12 border rounded-lg px-4 mb-4"
+            required
+          />
+
+          <button type="submit" className="w-full h-12 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Reset Password
+          </button>
+        </form>
+      </div>
+    </SiteLayout>
   );
 }

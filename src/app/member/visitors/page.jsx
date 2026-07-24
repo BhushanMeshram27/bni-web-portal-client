@@ -4,6 +4,22 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { apiRoot } from "@/services/api";
+import MemberPageShell, {
+  MemberPageHero,
+  MemberPageLoading,
+  MemberPageSection,
+  MemberStatCard,
+} from "@/components/layout/MemberPageShell";
+import {
+  Users,
+  Clock3,
+  BadgeCheck,
+  CircleX,
+  UserRound,
+  Building2,
+  Smartphone,
+  Search,
+} from "lucide-react";
 
 export default function VisitorsPage() {
   const [visitors, setVisitors] = useState([]);
@@ -21,9 +37,7 @@ export default function VisitorsPage() {
     const filtered = visitors.filter((visitor) => {
       const name = visitor?.name?.toLowerCase() || "";
       const company =
-        visitor?.company?.toLowerCase() ||
-        visitor?.businessName?.toLowerCase() ||
-        "";
+        visitor?.company?.toLowerCase() || visitor?.businessName?.toLowerCase() || "";
 
       return name.includes(keyword) || company.includes(keyword);
     });
@@ -37,14 +51,9 @@ export default function VisitorsPage() {
 
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        `${apiRoot}/visitors/my-visitors`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${apiRoot}/visitors/my-visitors`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = res.data.visitors || res.data || [];
 
@@ -67,62 +76,40 @@ export default function VisitorsPage() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(
-        `${apiRoot}/visitors/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`${apiRoot}/visitors/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       alert("Visitor deleted successfully");
-
       fetchVisitors();
     } catch (error) {
       console.log(error);
-
-      alert(
-        error?.response?.data?.message ||
-        "Failed to delete visitor"
-      );
+      alert(error?.response?.data?.message || "Failed to delete visitor");
     }
   };
 
-
   const totalVisitors = visitors.length;
-
-  const pendingVisitors = visitors.filter(
-    (v) => v.status === "pending"
-  ).length;
-
-  const approvedVisitors = visitors.filter(
-    (v) => v.status === "approved"
-  ).length;
-
-  const rejectedVisitors = visitors.filter(
-    (v) => v.status === "rejected"
-  ).length;
+  const pendingVisitors = visitors.filter((v) => v.status === "pending").length;
+  const approvedVisitors = visitors.filter((v) => v.status === "approved").length;
+  const rejectedVisitors = visitors.filter((v) => v.status === "rejected").length;
 
   const getStatusBadge = (status) => {
     switch (status) {
       case "approved":
         return (
-          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+          <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
             Approved
           </span>
         );
-
       case "rejected":
         return (
-          <span className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
+          <span className="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
             Rejected
           </span>
         );
-
       default:
         return (
-          <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-sm font-semibold">
+          <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
             Pending
           </span>
         );
@@ -130,250 +117,174 @@ export default function VisitorsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100">
-        <div className="text-center">
-          <div className="mx-auto h-14 w-14 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-          <p className="mt-4 text-lg font-semibold text-slate-600">
-            Loading Visitors...
-          </p>
-        </div>
-      </div>
-    );
+    return <MemberPageLoading label="Loading Visitors..." />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 p-6">
-
-      {/* Hero */}
-      <div className="rounded-3xl bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 p-8 shadow-2xl">
-
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-
-          <div>
-            <p className="uppercase tracking-[4px] text-blue-100 text-sm">
-              BNI Visitor Management
-            </p>
-
-            <h1 className="mt-2 text-4xl font-bold text-white">
-              My Visitors 👥
-            </h1>
-
-            <p className="mt-3 text-blue-100 max-w-xl">
-              Manage your invited visitors and track approval status.
-            </p>
-          </div>
-
+    <MemberPageShell>
+      <MemberPageHero
+        eyebrow="BNI Visitor Management"
+        title="My Visitors"
+        description="Manage your invited visitors and track approval status."
+        action={
           <Link
             href="/member/visitors/create"
-            className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 shadow-lg hover:scale-105 transition"
+            className="inline-flex shrink-0 items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-blue-700 shadow-md transition hover:bg-blue-50 sm:text-base"
           >
             + Invite Visitor
           </Link>
+        }
+      />
 
-        </div>
-      </div>
-
-      {/* Statistics */}
-
-      <div className="grid gap-6 mt-8 md:grid-cols-2 xl:grid-cols-4">
-
-        <StatCard
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MemberStatCard
           title="Total Visitors"
           value={totalVisitors}
-          icon="👥"
-          gradient="from-blue-500 to-indigo-600"
+          icon={<Users className="h-6 w-6 text-blue-600" />}
+          accent="text-blue-600"
         />
 
-        <StatCard
+        <MemberStatCard
           title="Pending"
           value={pendingVisitors}
-          icon="⏳"
-          gradient="from-yellow-500 to-orange-500"
+          icon={<Clock3 className="h-6 w-6 text-amber-600" />}
+          accent="text-amber-600"
         />
 
-        <StatCard
+        <MemberStatCard
           title="Approved"
           value={approvedVisitors}
-          icon="✅"
-          gradient="from-green-500 to-emerald-600"
+          icon={<BadgeCheck className="h-6 w-6 text-emerald-600" />}
+          accent="text-emerald-600"
         />
 
-        <StatCard
+        <MemberStatCard
           title="Rejected"
           value={rejectedVisitors}
-          icon="❌"
-          gradient="from-red-500 to-pink-600"
+          icon={<CircleX className="h-6 w-6 text-red-600" />}
+          accent="text-red-600"
         />
-
       </div>
 
-      {/* Search */}
+      <MemberPageSection title="Search Visitors">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
 
-      <div className="mt-8 rounded-3xl bg-white p-5 shadow-xl">
-
-        <input
-          type="text"
-          placeholder="Search visitor..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-slate-300 px-5 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-        />
-
-      </div>
-
-      {/* Table */}
-
-      <div className="mt-8 rounded-3xl bg-white shadow-2xl overflow-hidden">
-
-        <div className="border-b px-6 py-5">
-          <h2 className="text-2xl font-bold">
-            Visitor Directory
-          </h2>
+          <input
+            type="text"
+            placeholder="Search by name or company..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 py-3 pl-12 pr-4 text-sm outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100 sm:text-base"
+          />
         </div>
+      </MemberPageSection>
 
+      <MemberPageSection
+        title="Visitor Directory"
+        description={`Showing ${filteredVisitors.length} visitor${filteredVisitors.length === 1 ? "" : "s"}`}
+        className="overflow-hidden p-0"
+      >
         {filteredVisitors.length === 0 ? (
-          <div className="p-12 text-center">
-
-            <div className="text-6xl">👥</div>
-
-            <h2 className="mt-4 text-3xl font-bold">
+          <div className="px-6 py-12 text-center">
+            <div className="flex justify-center">
+              <Users className="h-14 w-14 text-blue-600" />
+            </div>
+            <h2 className="mt-4 text-xl font-semibold text-slate-900 sm:text-2xl">
               No Visitors Found
             </h2>
-
-            <p className="mt-3 text-gray-500">
-              Invite your first visitor.
+            <p className="mt-2 text-sm text-slate-500 sm:text-base">
+              Invite your first visitor to get started.
             </p>
-
           </div>
         ) : (
           <div className="overflow-x-auto">
-
-            <table className="min-w-full">
-
-              <thead className="bg-slate-100">
-
+            <table className="min-w-full text-sm">
+              <thead className="border-b border-slate-200 bg-slate-50">
                 <tr>
-                  <th className="px-6 py-4 text-left">Visitor</th>
-                  <th className="px-6 py-4 text-left">Company</th>
-                  <th className="px-6 py-4 text-left">Mobile</th>
-                  <th className="px-6 py-4 text-center">Status</th>
-                  <th className="px-6 py-4 text-center">Actions</th>
+                  <th className="px-4 py-4 text-left font-semibold text-slate-600 sm:px-6">
+                    Visitor
+                  </th>
+                  <th className="px-4 py-4 text-left font-semibold text-slate-600 sm:px-6">
+                    Company
+                  </th>
+                  <th className="hidden px-4 py-4 text-left font-semibold text-slate-600 md:table-cell sm:px-6">
+                    Mobile
+                  </th>
+                  <th className="px-4 py-4 text-center font-semibold text-slate-600 sm:px-6">
+                    Status
+                  </th>
+                  <th className="px-4 py-4 text-center font-semibold text-slate-600 sm:px-6">
+                    Actions
+                  </th>
                 </tr>
-
               </thead>
 
               <tbody>
-
                 {filteredVisitors.map((visitor) => (
-                  <tr
-                    key={visitor._id}
-                    className="border-b hover:bg-slate-50 transition"
-                  >
-                    <td className="px-6 py-5">
-
-                      <div className="flex items-center gap-4">
-
-                        <div className="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold">
-                          {visitor?.name?.charAt(0)?.toUpperCase()}
+                  <tr key={visitor._id} className="border-b border-slate-100 hover:bg-slate-50/80">
+                    <td className="px-4 py-4 sm:px-6">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-linear-to-r from-blue-500 to-indigo-600 text-sm font-bold text-white">
+                          <UserRound className="h-5 w-5 text-white" />
                         </div>
-
-                        <div>
-
-                          <h3 className="font-semibold">
-                            {visitor.name}
-                          </h3>
-
-                          <p className="text-sm text-gray-500">
-                            Visitor
-                          </p>
-
+                        <div className="min-w-0">
+                          <h3 className="truncate font-semibold text-slate-900">{visitor.name}</h3>
+                          <p className="text-xs text-slate-500 md:hidden">{visitor.mobile || "-"}</p>
                         </div>
-
                       </div>
-
                     </td>
 
-                    <td className="px-6 py-5">
-                      {visitor.company ||
-                        "N/A"}
+                    <td className="px-4 py-4 sm:px-6">
+                      <div className="flex items-center gap-2 text-slate-700">
+                        <Building2 className="h-4 w-4 text-slate-500" />
+                        <span>{visitor.company || visitor.businessName || "N/A"}</span>
+                      </div>
                     </td>
 
-                    <td className="px-6 py-5">
-                      {visitor.mobile || "-"}
+                    <td className="hidden px-4 py-4 md:table-cell sm:px-6">
+                      <div className="flex items-center gap-2 text-slate-700">
+                        <Smartphone className="h-4 w-4 text-slate-500" />
+                        <span>{visitor.mobile || "-"}</span>
+                      </div>
                     </td>
 
-                    <td className="px-6 py-5 text-center">
+                    <td className="px-4 py-4 text-center sm:px-6">
                       {getStatusBadge(visitor.status)}
                     </td>
 
-                    <td className="px-6 py-5 text-center">
+                    <td className="px-4 py-4 sm:px-6">
+                      <div className="flex flex-wrap items-center justify-center gap-2">
+                        <Link
+                          href={`/member/visitors/${visitor._id}`}
+                          className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-700 sm:text-sm"
+                        >
+                          View
+                        </Link>
 
-                      <Link
-                        href={`/member/visitors/${visitor._id}`}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                      >
-                        View
-                      </Link>
+                        <Link
+                          href={`/member/visitors/edit/${visitor._id}`}
+                          className="rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-amber-600 sm:text-sm"
+                        >
+                          Edit
+                        </Link>
 
-                      <Link
-                        href={`/member/visitors/edit/${visitor._id}`}
-                        className="rounded-lg bg-amber-500 hover:bg-amber-600 px-4 py-2 text-white"
-                      >
-                        Edit
-                      </Link>
-
-                      <button
-                        onClick={() => handleDelete(visitor._id)}
-                        className="rounded-lg bg-red-600 hover:bg-red-700 px-4 py-2 text-white"
-                      >
-                        Delete
-                      </button>
-
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(visitor._id)}
+                          className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-700 sm:text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
-
                   </tr>
                 ))}
-
               </tbody>
-
             </table>
-
           </div>
         )}
-
-      </div>
-
-    </div>
-  );
-}
-
-function StatCard({ title, value, icon, gradient }) {
-  return (
-    <div className="rounded-3xl bg-white p-6 shadow-xl hover:shadow-2xl transition">
-
-      <div className="flex justify-between items-center">
-
-        <div>
-
-          <p className="text-sm text-slate-500">
-            {title}
-          </p>
-
-          <h2 className="mt-3 text-4xl font-bold">
-            {value}
-          </h2>
-
-        </div>
-
-        <div
-          className={`h-16 w-16 rounded-2xl bg-gradient-to-r ${gradient} flex items-center justify-center text-3xl text-white`}
-        >
-          {icon}
-        </div>
-
-      </div>
-
-    </div>
+      </MemberPageSection>
+    </MemberPageShell>
   );
 }

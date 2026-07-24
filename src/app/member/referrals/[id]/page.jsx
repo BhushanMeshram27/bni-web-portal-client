@@ -192,16 +192,12 @@ export default function ReferralDetailsPage() {
 
     <button
       onClick={() => {
-        if (!businessValue) {
-          alert("Please enter Business Value");
-          return;
-        }
-
+       
         handleStatusUpdate("Converted");
       }}
       className="bg-purple-600 text-white px-4 py-2 rounded"
     >
-      Convert & Save Revenue
+      Convert
     </button>
 
   </div>

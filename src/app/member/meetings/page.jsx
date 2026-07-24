@@ -1,8 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  CalendarDays,
+  CalendarClock,
+  MapPin,
+  FileText,
+} from "lucide-react";
 import axios from "axios";
 import { apiRoot } from "@/services/api";
+import MemberPageShell, {
+  MemberPageHero,
+  MemberPageLoading,
+  MemberPageSection,
+  MemberStatCard,
+} from "@/components/layout/MemberPageShell";
 
 export default function MemberMeetings() {
   const [meetings, setMeetings] = useState([]);
@@ -18,14 +30,9 @@ export default function MemberMeetings() {
         return;
       }
 
-      const res = await axios.get(
-        `${apiRoot}/meetings`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.get(`${apiRoot}/meetings`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setMeetings(res.data.meetings || []);
     } catch (error) {
@@ -34,8 +41,6 @@ export default function MemberMeetings() {
       setLoading(false);
     }
   };
-
-
 
   useEffect(() => {
     fetchMeetings();
@@ -49,252 +54,142 @@ export default function MemberMeetings() {
     return () => clearInterval(timer);
   }, []);
 
-  const upcomingMeetings = meetings.filter((meeting) => {
-    const meetingStart = new Date(meeting.meetingDate);
-    const meetingEnd = new Date(
-      meetingStart.getTime() + 3 * 60 * 60 * 1000
-    );
-
-    return currentTime < meetingEnd;
-  }).length;
-
-  // 👇 Put it here
   const getMeetingStatus = (meetingDate) => {
     const meetingStart = new Date(meetingDate);
-
-    const meetingEnd = new Date(
-      meetingStart.getTime() + 3 * 60 * 60 * 1000
-    );
-
+    const meetingEnd = new Date(meetingStart.getTime() + 3 * 60 * 60 * 1000);
     return currentTime >= meetingEnd;
   };
 
+  const upcomingMeetings = meetings.filter((meeting) => {
+    const meetingStart = new Date(meeting.meetingDate);
+    const meetingEnd = new Date(meetingStart.getTime() + 3 * 60 * 60 * 1000);
+    return currentTime < meetingEnd;
+  }).length;
+
+  const uniqueLocations = new Set(meetings.map((meeting) => meeting.location)).size;
 
   if (loading) {
-    return (<div className="flex min-h-screen items-center justify-center bg-slate-50"> <div className="text-center"> <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-
-
-      <p className="mt-4 text-lg font-semibold text-gray-600">
-        Loading Meetings...
-      </p>
-    </div>
-    </div>
-    );
-
-
+    return <MemberPageLoading label="Loading Meetings..." />;
   }
 
-  return (<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 md:p-8">
+  return (
+    <MemberPageShell>
+      <MemberPageHero
+        eyebrow="BNI Member Portal"
+        title="Meetings"
+        description="Stay updated with upcoming chapter meetings and networking events."
+      />
 
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+       <MemberStatCard
+  title="Total Meetings"
+  value={meetings.length}
+  icon={<CalendarDays className="h-6 w-6 text-blue-600" />}
+  accent="text-blue-600"
+/>
 
-    {/* Hero Banner */}
-    <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 p-8 md:p-12 shadow-2xl">
+<MemberStatCard
+  title="Upcoming Meetings"
+  value={upcomingMeetings}
+  icon={<CalendarClock className="h-6 w-6 text-emerald-600" />}
+  accent="text-emerald-600"
+/>
 
-      <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
-
-      <div className="relative z-10">
-        <p className="text-sm uppercase tracking-[5px] text-blue-100">
-          BNI MEMBER PORTAL
-        </p>
-
-        <h1 className="mt-3 text-4xl md:text-5xl font-bold text-white">
-          Meetings
-        </h1>
-
-        <p className="mt-4 max-w-2xl text-blue-100">
-          Stay updated with upcoming chapter meetings and networking events.
-        </p>
+<MemberStatCard
+  title="Locations"
+  value={uniqueLocations}
+  icon={<MapPin className="h-6 w-6 text-purple-600" />}
+  accent="text-purple-600"
+/>
       </div>
-
-    </div>
-
-    {/* Statistics */}
-    <div className="mt-8 grid gap-6 md:grid-cols-3">
-
-      <div className="rounded-3xl bg-white p-6 shadow-xl">
-        <p className="text-sm text-gray-500">
-          Total Meetings
-        </p>
-
-        <h2 className="mt-3 text-5xl font-bold text-blue-600">
-          {meetings.length}
-        </h2>
-      </div>
-
-      <div className="rounded-3xl bg-white p-6 shadow-xl">
-        <p className="text-sm text-gray-500">
-          Upcoming Meetings
-        </p>
-
-        <h2 className="mt-3 text-5xl font-bold text-green-600">
-          {upcomingMeetings}
-        </h2>
-      </div>
-
-      <div className="rounded-3xl bg-white p-6 shadow-xl">
-        <p className="text-sm text-gray-500">
-          Locations
-        </p>
-
-        <h2 className="mt-3 text-5xl font-bold text-purple-600">
-          {
-            new Set(
-              meetings.map(
-                (meeting) => meeting.location
-              )
-            ).size
-          }
-        </h2>
-      </div>
-
-    </div>
-
-    {/* Meetings Grid */}
-    <div className="mt-8">
 
       {meetings.length === 0 ? (
-        <div className="rounded-3xl bg-white p-12 text-center shadow-xl">
-
-          <div className="mb-4 text-7xl">
-            📅
+        <MemberPageSection>
+          <div className="py-8 text-center">
+           <div className="flex justify-center">
+  <CalendarDays className="h-14 w-14 text-blue-600" />
+</div>
+            <h2 className="mt-4 text-xl font-semibold text-slate-900 sm:text-2xl">
+              No Meetings Found
+            </h2>
+            <p className="mt-2 text-sm text-slate-500 sm:text-base">
+              No meetings have been scheduled yet.
+            </p>
           </div>
-
-          <h2 className="text-3xl font-bold text-gray-800">
-            No Meetings Found
-          </h2>
-
-          <p className="mt-3 text-gray-500">
-            No meetings have been scheduled yet.
-          </p>
-
-        </div>
+        </MemberPageSection>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {meetings.map((meeting) => {
+            const isCompleted = getMeetingStatus(meeting.meetingDate);
 
-          {meetings.map((meeting) => (
-            <div
-              key={meeting._id}
-              className="
-              group
-              overflow-hidden
-              rounded-3xl
-              bg-white
-              shadow-xl
-              transition-all
-              duration-300
-              hover:-translate-y-2
-              hover:shadow-2xl
-            "
-            >
-
-              {/* Card Header */}
-              <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 text-white">
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-blue-100">
-                      Meeting
-                    </p>
-
-                    <h2 className="mt-2 text-2xl font-bold">
-                      {meeting.title}
-                    </h2>
-                  </div>
-
-                  <div className="text-4xl">
-                    📅
-                  </div>
-
+            return (
+              <article
+                key={meeting._id}
+                className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <div className="bg-linear-to-r from-blue-600 via-indigo-600 to-purple-600 px-5 py-5 text-white sm:px-6">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-100">
+                    Meeting
+                  </p>
+                  <h2 className="mt-2 text-lg font-semibold sm:text-xl">{meeting.title}</h2>
                 </div>
 
-              </div>
-
-              {/* Card Body */}
-              <div className="p-6">
-
-                <div className="space-y-4">
-
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">
-                      🗓️
-                    </span>
-
+                <div className="space-y-4 p-5 sm:p-6">
+                  <div className="flex items-start gap-3">
+                    <CalendarDays className="mt-1 h-5 w-5 text-blue-600" />
                     <div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                         Meeting Date
                       </p>
-
-                      <p className="font-semibold text-gray-800">
-                        {new Date(
-                          meeting.meetingDate
-                        ).toLocaleDateString()}
+                      <p className="mt-1 text-sm font-semibold text-slate-900 sm:text-base">
+                        {new Date(meeting.meetingDate).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">
-                      📍
-                    </span>
-
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-1 h-5 w-5 text-purple-600" />
                     <div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                         Location
                       </p>
-
-                      <p className="font-semibold text-gray-800">
+                      <p className="mt-1 text-sm font-semibold text-slate-900 sm:text-base">
                         {meeting.location}
                       </p>
                     </div>
                   </div>
 
                   {meeting.description && (
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">
-                        Description
-                      </p>
+  <div className="flex items-start gap-3">
+    <FileText className="mt-1 h-5 w-5 text-slate-500" />
 
-                      <p className="line-clamp-3 text-sm text-gray-600">
-                        {meeting.description}
-                      </p>
-                    </div>
-                  )}
+    <div>
+      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        Description
+      </p>
 
+      <p className="mt-1 line-clamp-3 text-sm leading-relaxed text-slate-600">
+        {meeting.description}
+      </p>
+    </div>
+  </div>
+)}
+
+                  <span
+                    className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold sm:text-sm ${
+                      isCompleted
+                        ? "bg-slate-100 text-slate-700"
+                        : "bg-emerald-100 text-emerald-700"
+                    }`}
+                  >
+                    {isCompleted ? "Completed" : "Upcoming"}
+                  </span>
                 </div>
-
-                {/* Status Badge */}
-                <div className="mt-6">
-                  {(() => {
-                    const meetingStart = new Date(meeting.meetingDate);
-                    const meetingEnd = new Date(
-                      meetingStart.getTime() + 3 * 60 * 60 * 1000
-                    );
-
-const isCompleted = getMeetingStatus(meeting.meetingDate);
-                    return (
-                      <span
-                        className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold ${isCompleted
-                            ? "bg-gray-100 text-gray-700"
-                            : "bg-green-100 text-green-700"
-                          }`}
-                      >
-                        {isCompleted ? "Completed" : "Upcoming"}
-                      </span>
-                    );
-                  })()}
-                </div>
-              </div>
-
-            </div>
-          ))}
-
+              </article>
+            );
+          })}
         </div>
       )}
-
-    </div>
-
-  </div>
-
+    </MemberPageShell>
   );
 }

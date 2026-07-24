@@ -13,6 +13,7 @@ const [loading, setLoading] = useState(false);
 const [formData, setFormData] = useState({
 title: "",
 meetingDate: "",
+meetingTime: "",
 location: "",
 description: "",
 });
@@ -121,7 +122,7 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
         </label>
 
         <input
-          type="datetime-local"
+          type="date"
           name="meetingDate"
           required
           value={formData.meetingDate}
@@ -129,6 +130,25 @@ return ( <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-5
           className="w-full rounded-xl border border-gray-300 p-4 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
+
+
+      <div>
+  <label className="mb-2 block font-semibold text-gray-700">
+    Meeting Time
+  </label>
+
+  <input
+    type="time"
+    name="meetingTime"
+    required
+    value={formData.meetingTime}
+    onChange={handleChange}
+    className="w-full rounded-xl border border-gray-300 p-4"
+  />
+   <p className="mt-2 text-sm text-gray-500">
+    Note: Meeting Time should be in 24-hour format (e.g., 09:30, 14:00, 18:45).
+  </p>
+</div>
 
       {/* Location */}
       <div>

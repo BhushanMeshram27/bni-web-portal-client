@@ -24,7 +24,7 @@ export default function ReferralsPage() {
     }
   };
 
-  
+
   if (loading) {
     return <div className="p-6">Loading referrals...</div>;
   }
@@ -58,6 +58,7 @@ export default function ReferralsPage() {
                 <th className="p-3 text-left">Client</th>
                 <th className="p-3 text-left">Mobile</th>
                 <th className="p-3 text-left">To Member</th>
+                <th className="p-3 text-left">Status</th>
 
                 <th className="p-3 text-left">Action</th>
               </tr>
@@ -72,6 +73,10 @@ export default function ReferralsPage() {
 
                   <td className="p-3">
                     {referral.toMember?.name || "N/A"}
+                  </td>
+
+                  <td className="p-3">
+                    {referral.status || "N/A"}
                   </td>
 
 
@@ -91,6 +96,13 @@ export default function ReferralsPage() {
                         Edit
                       </Link>
                     )}
+
+                    <button
+                      onClick={() => handleDelete(referral._id)}
+                      className="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
